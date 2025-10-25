@@ -1,226 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <link rel="apple-touch-icon" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
-  <link rel="icon" type="image/png" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
-  <title>Safety Observations 👷</title>
-  <style>
-    body { font-family: 'Arial', sans-serif; margin:0; padding:0; background-color:#e9e9e9; height:100vh; overflow:hidden; }
-    .app-container { display:flex; flex-direction:column; height:90%; max-width:500px; margin:0 auto; background-color:white; box-shadow:0 0 15px rgba(0,0,0,0.2); }
-    .header { text-align:center; padding:15px; font-size:18px; font-weight:bold; background-color:#333; color:white; border-bottom:1px solid #FF8C00; }
-    .content-area { flex-grow:1; overflow-y:auto; margin-bottom:60px; }
-    .tab-content { padding:10px 12px; display:none; height:100%; }
-    .tab-content.active { display:block; }
-    iframe { width:100%; height:calc(100vh - 130px); border:none; }
-    #InfoTab { overflow-y:auto; max-height:calc(100vh - 130px); padding-bottom:100px; }
-    .announcement-card { background-color:white; border-radius:8px; margin-bottom:12px; padding:15px; box-shadow:0 2px 5px rgba(0,0,0,0.1); border-left:5px solid #FF8C00; cursor:pointer; }
-    .card-title { font-weight:bold; color:#333; font-size:16px; margin-bottom:5px; text-align:center; }
-    .card-date { font-size:10px; color:#888; margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:5px; }
-    .card-content { font-size:13px; color:#555; display:block; text-align:center; } 
-    .info-month { font-size:18px; font-weight:bold; margin:8px 0 14px 0; text-align:center; }
-    .accordion { background-color:#f0f0f0; color:#222; cursor:pointer; padding:12px; width:100%; text-align:left; border:none; outline:none; transition:0.25s; font-size:15px; border-radius:6px; font-weight:700; }
-    .accordion:hover, .accordion.activeAcc { background-color:#e0e0e0; }
-    .panel { padding:12px 14px; display:none; background-color:white; overflow-y:auto; border-left:4px solid #FF8C00; margin-top:8px; border-radius:6px; max-height:500px; }
-    .panel ol, .panel ul { padding-left:20px; margin:0; line-height:1.6; font-size:14px; color:#333; }
-    .panel li { margin-bottom:6px; }
-    .nav-bar { display:flex; justify-content:space-around; position:fixed; bottom:0; width:100%; max-width:500px; height:60px; background-color:white; box-shadow:0 -5px 15px rgba(0,0,0,0.15); z-index:10; left:50%; transform:translateX(-50%); }
-    .nav-button { display:flex; flex-direction:column; align-items:center; justify-content:center; color:#777; font-size:11px; cursor:pointer; width:20%; transition:color 0.3s; }
-    .nav-button.active { color:#FF8C00; font-weight:bold; }
-    .nav-button:hover { color:#FF8C00; }
-    .nav-icon { font-size:20px; margin-bottom:3px; }
-    .icon-news::before { content:"📰"; }
-    .icon-form::before { content:"📝"; }
-    .icon-data::before { content:"📊"; }
-    .icon-tasks::before { content:"✅"; }
-    .icon-info::before { content:"ℹ️"; }
-    @media (min-width:600px) {
-      .app-container { max-width:1000px; height:90vh; margin-top:5vh; margin-bottom:5vh; border-radius:12px; overflow:hidden; }
-      .nav-bar { max-width:1000px; }
-      .content-area { margin-bottom:60px; }
-      .nav-button span { font-size:14px; }
-      .nav-icon { font-size:24px; }
-      .announcement-card { max-width:800px; margin-left:auto; margin-right:auto; }
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    /* MODAL STYLES */
-    .modal {
-        display: none; 
-        position: fixed; 
-        z-index: 20; 
-        left: 0;
-        top: 0;
-        width: 100%; 
-        height: 100%; 
-        overflow: auto; 
-        background-color: rgba(0,0,0,0.7); 
-        padding-top: 60px;
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto; /* 5% from the top and centered */
-        padding: 20px;
-        border: 1px solid #888;
-        width: 90%; 
-        max-width: 400px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-    .close-btn {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .close-btn:hover,
-    .close-btn:focus {
-        color: #333;
-        text-decoration: none;
-    }
-    #leaderboardTable {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-    }
-    #leaderboardTable th, #leaderboardTable td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-        font-size: 14px;
-    }
-    #leaderboardTable th {
-        background-color: #f2f2f2;
-        color: #333;
-        text-align: center;
-    }
-    #leaderboardTable tr:nth-child(1) td {
-        background-color: gold; 
-        font-weight: bold;
-    }
-    #leaderboardTable tr:nth-child(2) td {
-        background-color: silver;
-    }
-    #leaderboardTable tr:nth-child(3) td {
-        background-color: #cd7f32; /* Bronze */
-        color: white;
-    }
-  </style>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
+    <title>My Observations App 👷🏻‍♂️</title>
+    <style>
+        /* 🟢 3. توحيد الألوان باستخدام متغيرات CSS */
+        :root {
+          --primary-color: #FF6F00; /* Darker, richer orange */
+          --secondary-color: #2C3E50; /* Dark blue/almost black */
+          --accent-light: #ECF0F1; /* Light grey for subtle backgrounds */
+          --text-muted: #7F8C8D; /* Muted grey for secondary text */
+          --border-color: #BDC3C7; /* Light grey for borders */
+          --success-color: #27AE60; /* Green for success/positive */
+          --danger-color: #C0392B; /* Red for danger/emergency */
+
+          /* متغيرات العرض الافتراضية للجوال */
+          --app-max-width: 500px;
+          --app-height: 90vh;
+          --app-margin: 0 auto;
+        }
+
+        /* ======================================= */
+        /* === القواعد الافتراضية (الجوال أولاً) === */
+        /* ======================================= */
+
+        body {
+            font-family: 'Lato', sans-serif; /* Body text font */
+            margin:0;
+            padding:0;
+            background-color:var(--accent-light);
+            height:100vh;
+            overflow:hidden;
+        }
+        .app-container {
+            display:flex;
+            flex-direction:column;
+            height: var(--app-height);
+            max-width: var(--app-max-width); /* حجم الجوال */
+            margin: var(--app-margin);
+            background-color:white;
+            box-shadow:0 8px 20px rgba(0,0,0,0.1); /* Softer, larger shadow */
+            border-radius: 12px; /* More rounded corners */
+            overflow: hidden; /* لمنع بروز العناصر خارج الحدود */
+        }
+        .header {
+            text-align:center;
+            padding:18px 15px; /* Slightly more padding */
+            font-family: 'Poppins', sans-serif; /* Heading font */
+            font-size:20px; /* Slightly larger */
+            font-weight:700; /* Heavier weight for impact */
+            background-color:var(--secondary-color);
+            color:white;
+            border-bottom:3px solid var(--primary-color); /* Thicker accent line */
+            position: relative; /* For the gradient effect */
+            overflow: hidden;
+        }
+        /* Gradient overlay for header */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,111,0,0.1) 0%, rgba(44,62,80,0.1) 100%);
+            z-index: 0;
+        }
+        .header span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-area {
+            flex-grow:1;
+            overflow-y:auto;
+            margin-bottom:60px; /* مساحة لشريط التنقل */
+            padding: 15px; /* Add some general padding for content */
+        }
+        .tab-content {
+            display:none;
+            height:100%;
+            box-sizing: border-box; /* لحساب الـ padding داخل الـ height */
+        }
+        .tab-content.active {
+            display:block;
+        }
+        /* ارتفاع الإطارات: يعتمد على ارتفاع التاب */
+        iframe {
+            width:100%;
+            height:calc(100% - 0px); /* Adjust for content-area padding */
+            border:none;
+            border-radius: 8px; /* Rounded corners for iframes */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Subtle shadow for iframes */
+        }
+        /* ارتفاع محتوى المعلومات */
+        #InfoTab {
+            overflow-y:auto;
+            max-height:calc(100% - 0px); /* Adjust for content-area padding */
+            padding-bottom:100px;
+        }
+
+        /* 🟢 2. تعديل بطاقة الأخبار لـ UX */
+        .announcement-card {
+            background-color:white;
+            border-radius:10px; /* More rounded */
+            margin-bottom:15px; /* More space */
+            padding:18px; /* More padding */
+            box-shadow:0 4px 10px rgba(0,0,0,0.08); /* Softer shadow */
+            border-left:6px solid var(--primary-color); /* Thicker accent border */
+            cursor:pointer;
+            position: relative;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .announcement-card:hover {
+            transform: translateY(-3px);
+            box-shadow:0 6px 15px rgba(0,0,0,0.12);
+        }
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight:600;
+            color:var(--secondary-color);
+            font-size:17px;
+            padding-right: 35px; /* Space for icon */
+            position: relative;
+            text-align: left; /* Align title to left */
+        }
+        .card-date {
+            font-size:11px;
+            color:var(--text-muted);
+            margin-bottom:12px;
+            border-bottom:1px solid var(--border-color); /* Lighter border */
+            padding-bottom:8px;
+            text-align: left; /* Align date to left */
+        }
+        .card-content {
+            font-size:14px;
+            color:#444;
+            display:none;
+            text-align:justify;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dotted var(--border-color);
+            line-height: 1.6; /* Better readability */
+        }
+        .card-title .toggle-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            transition: transform 0.3s ease-in-out;
+            font-size: 16px;
+        }
+        .card-title.open .toggle-icon {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        /* نهاية تعديل بطاقة الأخبار */
+
+        .info-month {
+            font-family: 'Poppins', sans-serif;
+            font-size:19px;
+            font-weight:700;
+            margin:10px 0 16px 0;
+            text-align:center;
+            color: var(--secondary-color);
+        }
+        .accordion {
+            background-color:var(--accent-light);
+            color:var(--secondary-color); /* اللون الافتراضي للنص */
+            cursor:pointer;
+            padding:15px 18px; /* More padding */
+            width:100%;
+            text-align:left;
+            border:none;
+            outline:none;
+            /* 🔴 مهم: يجب أن تكون Transition على color و background-color */
+            transition:background-color 0.3s ease, transform 0.2s ease, color 0.3s ease; 
+            font-family: 'Lato', sans-serif;
+            font-size:15px;
+            border-radius:8px; /* More rounded */
+            font-weight:700;
+            display: flex;
+            align-items: center;
+            margin-top: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+        }
+        .accordion:hover {
+            background-color:#E0E5E9; /* Slightly darker on hover */
+            transform: translateY(-2px);
+        }
+        /* 🛑 التعديل هنا: عند تفعيل الأكورديون - سيتم تجاوزه بالـ JS لتطبيق اللون الديناميكي */
+        .accordion.activeAcc {
+            /* سنعتمد على inline style في JS */
+            transform: translateY(-2px);
+        }
+        
+        /* 🛑 التعديل هنا: الرمز يرث لون النص (والذي سيصبح أبيض عند التفعيل) */
+        .accordion i {
+            margin-inline-end: 12px; /* More space */
+            font-size: 19px; /* Slightly larger icon */
+            /* الرمز يرث اللون من الأب */
+            color: inherit !important; 
+            transition: color 0.3s ease;
+        }
+        /* تعديل خاص لزر الطوارئ */
+        #emergencyAccordion {
+            /* سنعتمد على data-color=danger-color أو #FF0000 */
+            border: 2px solid var(--danger-color);
+        }
+        #emergencyAccordion:hover {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+        /* الألوان عند تفعيل زر الطوارئ */
+        #emergencyAccordion.activeAcc {
+            background-color: var(--danger-color) !important;
+            color: white !important;
+            border-color: var(--danger-color);
+        }
+
+
+        .panel {
+            padding:15px 18px; /* More padding */
+            display:none;
+            background-color:white;
+            overflow-y:auto;
+            /* 🛑 التعديل هنا: الخط الجانبي يرث اللون المخصص */
+            border-left:5px solid currentColor; 
+            margin-top:8px;
+            border-radius:0 8px 8px 0; /* Only right/bottom rounded for accent */
+            max-height:500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .panel ul, .panel ol {
+            padding-left: 28px; /* Adjust padding for list items */
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+        .panel ul li, .panel ol li {
+            margin-bottom: 6px;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        /* 🛠️ التعديل هنا: تطبيق النقاط البرتقالية فقط على القوائم غير المرقمة (<ul>) */
+        .panel ul li:before {
+            content:"\2022";
+            /* 🛑 التعديل هنا: النقاط ترث لون الأكورديون النشط */
+            color: currentColor; 
+            font-weight:bold;
+            display:inline-block;
+            width:1em;
+            margin-left: -1em;
+        }
+
+        /* 🆕 إعادة تفعيل الترقيم الافتراضي للقوائم المرقمة (<ol>) بدون نقاط إضافية */
+        .panel ol {
+            list-style-type: decimal; /* للتأكد من استخدام الأرقام 1, 2, 3... */
+            padding-left: 25px; /* لإعطاء مساحة للترقيم الافتراضي */
+            margin-top: 5px;
+        }
+        .panel ol li {
+            list-style-type: decimal;
+            margin-bottom: 5px;
+        }
+        /* نهاية تعديل القوائم */
+
+        /* === شريط التنقل - الألوان المخصصة و التحسينات === */
+        .nav-bar {
+            display:flex;
+            justify-content:space-around;
+            position:fixed;
+            bottom:0;
+            width:100%;
+            max-width: var(--app-max-width); /* يتبع العرض الأقصى للحاوية */
+            height:65px; /* Slightly taller nav bar */
+            background-color:white;
+            box-shadow:0 -5px 20px rgba(0,0,0,0.1); /* Softer shadow upwards */
+            z-index:10;
+            left:50%;
+            transform:translateX(-50%);
+            border-radius: 0 0 12px 12px; /* Match app container corners */
+        }
+        .nav-button {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            color:var(--text-muted); /* Muted color for inactive */
+            font-size:12px; /* Slightly larger font */
+            cursor:pointer;
+            width:20%;
+            transition:color 0.3s ease, transform 0.2s ease;
+            position: relative;
+            font-family: 'Lato', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* 🛑 التعديل هنا: نعتمد على JavaScript لتطبيق لون الزر النشط */
+        .nav-button.active { 
+             /* لون الزر (النص) سيتم تحديده في JavaScript باستخدام data-color */
+             font-weight:bold; 
+             /* نستخدم اللون الحالي للزر النشط كخلفية للخط العلوي */
+             color: inherit; 
+        }
+
+        /* 🟢 2. إضافة خط علوي للزر النشط */
+        .nav-button.active::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; /* Thicker accent line */
+            /* نستخدم "currentColor" ليرث لون الزر النشط (الأخضر، الأصفر، إلخ) */
+            background-color: currentColor; 
+            border-radius: 0 0 5px 5px;
+        }
+
+        .nav-button:hover { color:var(--primary-color); transform: translateY(-3px); }
+        .nav-icon { 
+            font-size:22px; 
+            margin-bottom:4px; 
+            /* نستخدم "currentColor" لكي يرث الرمز لون الزر الأب (.nav-button) */
+            color: currentColor; 
+        } 
+        
+        /* 🟢 4. مؤشر التحميل (Spinner) */
+        .loading-spinner {
+            display: flex; justify-content: center; align-items: center; padding: 25px; color: var(--primary-color); font-size: 18px;
+            font-weight: bold;
+        }
+        .loading-spinner i { margin-right: 10px; font-size: 24px; }
+
+        /* MODAL STYLES (لم يتم تغييرها) */
+        .modal {
+            display: none; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0,0,0,0.6); 
+            padding-top: 60px;
+            animation: fadeIn 0.3s ease-out; 
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 25px; border: none; 
+            width: 90%; max-width: 450px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            position: relative;
+            animation: slideIn 0.3s ease-out; 
+        }
+        .close-btn {
+            color: var(--text-muted); float: right; font-size: 30px; font-weight: bold; cursor: pointer;
+            position: absolute; top: 15px; right: 20px;
+        }
+        .close-btn:hover, .close-btn:focus { color: var(--danger-color); text-decoration: none; }
+        #leaderboardTable { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        #leaderboardTable th, #leaderboardTable td { border: 1px solid var(--border-color); padding: 10px; text-align: left; font-size: 14px; }
+        #leaderboardTable th { background-color: var(--accent-light); color: var(--secondary-color); text-align: center; font-family: 'Poppins', sans-serif; font-weight: 700; }
+        #emergencyContactsModal .modal-content { max-width: 700px; } 
+        #emergencyContactsModal table th, #emergencyContactsModal table td { font-size: 13.5px; text-align: center; }
+        #emergencyContactsModal table td:nth-child(1), #emergencyContactsModal table td:nth-child(2) { text-align: left; }
+        #emergencyContactsModal table a { text-decoration: none; color: var(--danger-color); font-weight: bold; transition: color 0.2s ease; }
+        #emergencyContactsModal table a:hover { color: var(--secondary-color); }
+        #emergencyContactsModal h2 { color: var(--danger-color); font-family: 'Poppins', sans-serif; }
+        #emergencyContactsModal h3 { color: var(--secondary-color); font-family: 'Poppins', sans-serif; }
+
+
+        /* Keyframe Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+
+        /* ======================================= */
+        /* === استعلام الوسائط لشاشات الكمبيوتر === */
+        /* ======================================= */
+        @media (min-width: 768px) {
+            /* تغيير المتغيرات الخاصة بالعرض لشاشة الكمبيوتر */
+            :root {
+                --app-max-width: 1000px; 
+                --app-height: 95vh;
+                --app-margin: 2.5vh auto;
+            }
+
+            /* ضبط ارتفاع الإطارات لتناسب الحاوية الأكبر */
+            iframe {
+                height: 100%;
+            }
+
+            /* ضبط ارتفاع محتوى المعلومات */
+             #InfoTab {
+                height: 100%;
+                max-height: 100%;
+                padding-bottom: 80px; 
+            }
+
+            /* مساحة المحتوى */
+            .content-area {
+                margin-bottom: 65px; 
+            }
+
+            /* شريط التنقل يتبع العرض الجديد للحاوية */
+            .nav-bar {
+                max-width: var(--app-max-width);
+                border-radius: 0 0 12px 12px;
+            }
+
+            /* Flexbox for better modal centering on desktop */
+            .modal {
+                padding-top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                margin: auto; 
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div id="leaderboardModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <h2 style="text-align:center; color:#333; margin-top:0;">🏆 Monthly Leaderboard</h2>
-    <div id="leaderboardContainer">Loading leaderboard...</div>
-  </div>
-</div>
-<div class="app-container">
-  <div class="header">Safety Observations 👷 تطبيق ملاحظاتي</div>
-
-  <div class="content-area">
-
-    <div id="NewsTab" class="tab-content">
-      <div id="AnnouncementsContainer">
-        <div class="announcement-card">
-          <div class="card-date">Loading...</div>
-          <div class="card-title">Fetching news...</div>
-          <div class="card-content" style="display:block;">Loading content...</div>
+    <div class="modal-content">
+        <span class="close-btn" onclick="hideLeaderboardModal()">&times;</span>
+        <h2 style="text-align:center; color:var(--secondary-color); margin-top:0; font-family: 'Poppins', sans-serif;">🏆 Monthly Leaderboard</h2>
+        <div id="leaderboardContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> Loading leaderboard...
+            </div>
         </div>
-      </div>
+    </div>
+</div>
+
+<div id="emergencyContactsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="hideEmergencyContactsModal()">&times;</span>
+        <h2 style="text-align:center; color:var(--danger-color); margin-top:0; font-family: 'Poppins', sans-serif;">🆘 EMERGENCY CONTACTS</h2>
+
+        <div id="emergencyContactsTableContainer" style="overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background-color: var(--accent-light);">
+                        <th style="border: 1px solid var(--border-color); padding: 8px; text-align: left;">Name</th>
+                        <th style="border: 1px solid var(--border-color); padding: 8px; text-align: left;">Designation</th>
+                        <th style="border: 1px solid var(--border-color); padding: 8px; text-align: center;">Contact No.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Maher A. Jardali</td><td style="border: 1px solid var(--border-color); padding: 8px;">Operation Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505817134">050 581 7134</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Rifat Mehmood</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505366873">050 536 6873</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahzad Ahmad Khan</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0543133645">054 313 3645</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Mahmoud Al Cheikh</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0551367496">055 136 7496</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Adnan Ghemrawi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer (Hydrotest)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0500291404">050 029 1404</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hassan El Cherbagi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0539039724">053 903 9724</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hadi Hamdi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Mechanical Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0508838541">050 883 8541</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Imad El Hage</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project PMV Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0553713952">055 371 3952</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Rabih Hassan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Civil Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0504838832">050 483 8832</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Om Prakash</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0544303677">054 430 3677</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Tauqeer Nabi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Environmental Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0595820934">059 582 0934</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Irfan Haider</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Supervisor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0590654748">059 065 4748</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Taha Ghemrawi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Transport Officer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0539195375">053 919 5375</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Abdul Karim</td><td style="border: 1px solid var(--border-color); padding: 8px;">Material Supervisor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0502884442">050 288 4442</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Arif Khan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Safety officer/BLS/First Ajder</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0576563119">057 656 3119</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Dr. Ahmed Hussein</td><td style="border: 1px solid var(--border-color); padding: 8px;">CAT Doctor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0562535421">056 253 5421</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Romelle M. Pagayon</td><td style="border: 1px solid var(--border-color); padding: 8px;">Male Nurse</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0531551924">053 155 1924</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Joe Franco V. Yabut</td><td style="border: 1px solid var(--border-color); padding: 8px;">CAT First aider</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0506735217">050 673 5217</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahid Bhatti</td><td style="border: 1px solid var(--border-color); padding: 8px;">Ambulance Driver</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0593886520">059 388 6520</a></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="text-align:center; color:var(--secondary-color); margin-top:25px; border-top:1px dashed var(--border-color); padding-top:15px; font-family: 'Poppins', sans-serif;">External Emergency Contacts</h3>
+        <table style="width:100%; border-collapse: collapse; font-size:13.5px;">
+            <thead>
+                <tr style="background-color: var(--accent-light);">
+                    <th style="border: 1px solid var(--border-color); padding: 8px;">Description</th>
+                    <th style="border: 1px solid var(--border-color); padding: 8px;">Tel. Numbers</th>
+                    <th style="border: 1px solid var(--border-color); padding: 8px;">Description</th>
+                    <th style="border: 1px solid var(--border-color); padding: 8px;">Tel. Numbers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Southern Area (Abqaiq)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135720911">013 572 0911</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Civil Defense (Fire)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:998">998</a></td></tr>
+                <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Nadec Hospital (Haradh)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135849000">013 584 9000</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Red Crescent (Ambulance)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:997">997</a></td></tr>
+                <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Al Ahsa Hospital (Al Hofuf)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135844000">013 584 4000</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Local Police</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:999">999</a></td></tr>
+                <tr><td></td><td></td><td style="border: 1px solid var(--border-color); padding: 8px;">Local Traffic Accident</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:993">993</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="app-container">
+    <div class="header"><span>My Observations App 👷🏻‍♂️</span></div>
+
+    <div class="content-area">
+
+        <div id="NewsTab" class="tab-content">
+            <div id="AnnouncementsContainer">
+                <div id="newsLoading" class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i> Fetching news...
+                </div>
+                </div>
+        </div>
+
+        <div id="FormTab" class="tab-content">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfYED_4UfHcmWn0fQOjtR5s8A0-Bhr4dwpe-80GjKkLeTR_Lw/viewform?embedded=true"></iframe>
+        </div>
+
+        <div id="DataTab" class="tab-content">
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTXlN-sE-IkQJLMaVOvRGSBYNLsDvwZTD15w7rarTIXBGoacF0C5_eiI7OmFs__zA8jtlwhy0ULLZ8N/pubhtml"></iframe>
+        </div>
+
+        <div id="TasksTab" class="tab-content">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSezm0wWTdEsvkIdnzhfpRf0G37tZzqbY-AF-BHfbXXiLr2rKA/viewform?embedded=true"></iframe>
+        </div>
+
+        <div id="InfoTab" class="tab-content active"> 
+            <div class="info-month"> The Color Code of This Month is: <span id="colorName">...</span></div>
+
+            <div class="announcement-card" id="eomCard" style="border:2px solid gold; margin-bottom:15px; cursor:pointer;">
+                <div class="card-title" id="eomCardTitle" style="color:var(--secondary-color); font-size:18px;">
+                    <i class="fas fa-trophy" style="color: #FFD700;"></i> Employee of the Month:
+                </div>
+                <div class="card-content" id="employeeOfMonth" style="font-size:18px; font-weight:bold; color:var(--primary-color); display:block; border-top: none; padding-top: 0; margin-top: 0;">Loading...</div>
+            </div>
+
+            <button class="accordion" onclick="showLeaderboardModal()" data-color="#FFD700">
+                <i class="fas fa-list-ol"></i> Monthly Leaderboard
+            </button>
+
+            <button class="accordion" id="emergencyAccordion" onclick="showEmergencyContactsModal()" data-color="#FF0000">
+                <i class="fas fa-ambulance" style="color: var(--danger-color);"></i> EMERGENCY CONTACTS
+              </button>
+
+            <button class="accordion" id="reportingAccordion" data-color="#ffc107">
+                <i class="fas fa-exclamation-triangle"></i> EMERGENCY REPORTING PROCEDURES
+            </button>
+            <div class="panel" id="reportingPanel">
+                <ol>
+                    <li>Dial the Number - (الاتصال بالرقم).</li>
+                    <li>Describe the Exact location of the emergencies (تحديد الموقع بدقة).</li>
+                    <li>Describe the nature of the emergencies (وصف طبيعة الطوارئ).</li>
+                    <li>Identify the Emergency Service Required (Fire, Ambulance, Security) and repeat the message (تحديد الخدمة المطلوبة وتكرار الرسالة).</li>
+                    <li>Answer all the questions from the operator (الإجابة على أسئلة المتصل).</li>
+                    <li>Don't Hang up till the operator tells you to do so (لا تُغلق الخط حتى يُطلب منك ذلك).</li>
+                </ol>
+            </div>
+
+            <button class="accordion" id="evacuationAccordion" data-color="var(--success-color)">
+                <i class="fas fa-door-open"></i> EVACUATION TIPS
+            </button>
+            <div class="panel" id="evacuationPanel">
+                <ul>
+                    <li>When an emergency condition exists or upon hearing the emergency alarm, everyone must ensure:</li>
+                    <li>All work must **stop**, shut down all power equipment (i.e., computer, welding machine, vehicles, cranes etc.).</li>
+                    <li>If you are in the building, **warn others around you** if possible & evacuate the personnel to the designated **assembly area**.</li>
+                    <li>A **roll call must be taken** by manager or immediate supervisor & every man must be accounted for.</li>
+                    <li>Standby and wait for further instructions re-enter the work area only when permission has been granted by the company representative.</li>
+                </ul>
+            </div>
+
+            <button class="accordion" id="safetyAccordion" data-color="#007bff">
+                <i class="fas fa-user-shield"></i> Safety Responsibilities
+            </button>
+            <div class="panel" id="safetyPanel">
+                <ol>
+                    <li>Reporting chain to follow site HSE / Safety Supervisor, Coordinator & Manager.</li>
+                    <li>Visibly demonstrate the priority of safety in all activities, including setting a good personal example.</li>
+                    <li>Understand and be familiar with safety and health requirements of the contract, as well as CSSP, HIP, JSA, GI’s, CSM, local laws, and other best practices.</li>
+                    <li>Conduct all TBTs (Daily, Weekly & Mass) with site workers and construction supervisory staff, and hand over accurate records to the HSE Supervisor at the end of each shift.</li>
+                    <li>Conduct frequent HSE inspections of the assigned location and continuously monitor ongoing activities.</li>
+                    <li>Report all NM, FAI, CA & PA to your immediate HSE Supervisor.</li>
+                    <li>Report all incidents that result in injury or property damage to your immediate HSE Supervisor.</li>
+                    <li>Report misuse of equipment, tools, or facilities to your immediate HSE Supervisor.</li>
+                    <li>Report any severe arguments, signs of prejudice, bullying, or fighting to your immediate HSE Supervisor.</li>
+                    <li>Report any other Health, Safety, or Environmental concerns to your immediate HSE Supervisor.</li>
+                    <li>Report all unsafe situations and occurrences immediately.</li>
+                    <li>Be vigilant and present at the site location at all times while activities are ongoing to ensure safe operations.</li>
+                    <li>Responsible and accountable for accurate and timely reporting of all HSE issues to the assigned HSE Supervisor.</li>
+                    <li>Whenever the Safety Officer has an HSE concern, report it immediately to the person in charge (Foreman, Supervisor, or Site Engineer), regardless of the action taken, and submit a report to the HSE Supervisor or HSE Coordinator/Manager.</li>
+                    <li>Liaise with client representatives when instructed by the HSE Supervisor, Coordinator, or Manager.</li>
+                    <li>Monitor and close all site-related PSI points, HSE findings, and observations raised during audits, inspections, or site visits by client or management.</li>
+                    <li>Follow up with construction site supervision to close all site HSE issues and concerns.</li>
+                    <li>Provide correctly and accurately filled checklists, including but not limited to heavy equipment, daily site inspection, and portable electrical tools checklists.</li>
+                    <li>Inspect and monitor subcontractor activities to ensure compliance with the OHS management system.</li>
+                    <li>Ensure that subcontractors and visitors receive safety orientation prior to entering the site.</li>
+                    <li>Ensure all equipment is in safe working condition and report abnormalities immediately.</li>
+                    <li>Ensure no N.D.E. is carried out if it may endanger any person.</li>
+                    <li>Ensure 100% compliance with the work permit system at the site (Client and CAT).</li>
+                    <li>Ensure that equipment operators are competent and hold valid certificates.</li>
+                    <li>Carry out monthly inspections, including fire extinguishers, rigging, and lifting equipment.</li>
+                    <li>Ensure all tools and electrical equipment are in good condition and safe to use.</li>
+                    <li>Ensure scaffolding platforms and ladders are safe, secured, inspected, and tagged before use.</li>
+                    <li>Ensure the jobsite is kept tidy and waste materials are removed at the end of each shift.</li>
+                    <li>Stop work as per HSI 063 and the Area Manager Stop Work Authority Policy.</li>
+                    <li>Participate in or conduct incident investigations, safety meetings, drills, and safety training sessions.</li>
+                    <li>Assist in implementing the waste management plan at the project site and camp.</li>
+                    <li>Follow and implement all written and verbal business-related instructions given by your seniors.</li>
+                </ol>
+            </div>
+
+            <button class="accordion" data-color="var(--primary-color)">
+                <i class="fas fa-lightbulb"></i> Daily Safety Tip
+            </button>
+            <div class="panel">
+                <ul>
+                    <li>Stay hydrated during long shifts ☀️</li>
+                    <li>Always wear your PPE 👷‍♂️</li>
+                    <li>Report near misses promptly 🧾</li>
+                    <li>Use proper lifting techniques 💪</li>
+                </ul>
+            </div>
+
+            <button class="accordion" data-color="#6f42c1">
+                <i class="fas fa-link"></i> Useful Links
+            </button>
+            <div class="panel">
+                <ul>
+                    <li><a href="https://drive.google.com/file/d/15gvUFs5ELvaUhDVTapkvGf6a5GkGEx5s/view?usp=sharing" target="_blank">📘 CSM Book</a></li>
+                    <li><a href="https://drive.google.com/file/d/109vG3Hk3PdgvQF87k0EJ1IiKDTDfdQTv/view?usp=sharing" target="_blank">📗 Saudi Aramco Safety HandBook</a></li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 
-    <div id="FormTab" class="tab-content">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfYED_4UfHcmWn0fQOjtR5s8A0-Bhr4dwpe-80GjKkLeTR_Lw/viewform?embedded=true"></iframe>
+    <div class="nav-bar">
+        <div class="nav-button" data-color="#17a2b8" onclick="openTab(event, 'NewsTab')">
+            <span class="nav-icon"><i class="fas fa-bullhorn"></i></span>
+            <span>News</span>
+        </div>
+        <div class="nav-button" data-color="var(--primary-color)" onclick="openTab(event, 'FormTab')">
+            <span class="nav-icon"><i class="fas fa-pen-to-square"></i></span>
+            <span>Observation</span>
+        </div>
+        <div class="nav-button" data-color="var(--success-color)" onclick="openTab(event, 'DataTab')">
+            <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
+            <span>Safety Data</span>
+        </div>
+        <div class="nav-button" data-color="#6f42c1" onclick="openTab(event, 'TasksTab')">
+            <span class="nav-icon"><i class="fas fa-list-check"></i></span>
+            <span>Daily Tasks</span>
+        </div>
+        <div class="nav-button active" data-color="var(--danger-color)" onclick="openTab(event, 'InfoTab')"> 
+            <span class="nav-icon"><i class="fas fa-circle-info"></i></span>
+            <span>Info</span>
+        </div>
     </div>
-
-    <div id="DataTab" class="tab-content">
-      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTXlN-sE-IkQJLMaVOvRGSBYNLsDvwZTD15w7rarTIXBGoacF0C5_eiI7OmFs__zA8jtlwhy0ULLZ8N/pubhtml"></iframe>
-    </div>
-
-    <div id="TasksTab" class="tab-content">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSezm0wWTdEsvkIdnzhfpRf0G37tZzqbY-AF-BHfbXXiLr2rKA/viewform?embedded=true"></iframe>
-    </div>
-
-    <div id="InfoTab" class="tab-content">
-      <div class="info-month"> The Color Code of This Month is: <span id="colorName">...</span></div>
-
-      <div class="announcement-card" id="eomCard" style="border:2px solid gold; margin-bottom:12px; cursor:pointer;">
-        <div class="card-title" id="eomCardTitle" style="color:black; font-size:18px;">🦺 The Employee of the Month :</div>
-        <div class="card-content" id="employeeOfMonth" style="font-size:18px; font-weight:bold; color:black;">Loading...</div>
-      </div>
-
-      <button class="accordion" id="safetyAccordion">🦺 Safety Responsibilities</button>
-      <div class="panel" id="safetyPanel">
-        <ol>
-          <li>Reporting chain to follow site HSE / Safety Supervisor, Coordinator & Manager.</li>
-          <li>Visibly demonstrate the priority of safety in all activities, including setting a good personal example.</li>
-          <li>Understand and be familiar with safety and health requirements of the contract, as well as CSSP, HIP, JSA, GI’s, CSM, local laws, and other best practices.</li>
-          <li>Conduct all TBTs (Daily, Weekly & Mass) with site workers and construction supervisory staff, and hand over accurate records to the HSE Supervisor at the end of each shift.</li>
-          <li>Conduct frequent HSE inspections of the assigned location and continuously monitor ongoing activities.</li>
-          <li>Report all NM, FAI, CA & PA to your immediate HSE Supervisor.</li>
-          <li>Report all incidents that result in injury or property damage to your immediate HSE Supervisor.</li>
-          <li>Report misuse of equipment, tools, or facilities to your immediate HSE Supervisor.</li>
-          <li>Report any severe arguments, signs of prejudice, bullying, or fighting to your immediate HSE Supervisor.</li>
-          <li>Report any other Health, Safety, or Environmental concerns to your immediate HSE Supervisor.</li>
-          <li>Report all unsafe situations and occurrences immediately.</li>
-          <li>Be vigilant and present at the site location at all times while activities are ongoing to ensure safe operations.</li>
-          <li>Responsible and accountable for accurate and timely reporting of all HSE issues to the assigned HSE Supervisor.</li>
-          <li>Whenever the Safety Officer has an HSE concern, report it immediately to the person in charge (Foreman, Supervisor, or Site Engineer), regardless of the action taken, and submit a report to the HSE Supervisor or HSE Coordinator/Manager.</li>
-          <li>Report any mistreated behavior immediately and submit a written report to the HSE Supervisor or HSE Coordinator/Manager.</li>
-          <li>Fill out observation forms clearly and concisely for all unsafe occurrences, obtain signatures from the activity foreman/supervisor/site engineer, and hand them over to the HSE Supervisor.</li>
-          <li>Maintain accurate records of all activities related to HSE.</li>
-          <li>Liaise with client representatives when instructed by the HSE Supervisor, Coordinator, or Manager.</li>
-          <li>Monitor and close all site-related PSI points, HSE findings, and observations raised during audits, inspections, or site visits by client or management.</li>
-          <li>Follow up with construction site supervision to close all site HSE issues and concerns.</li>
-          <li>Provide correctly and accurately filled checklists, including but not limited to heavy equipment, daily site inspection, and portable electrical tools checklists.</li>
-          <li>Inspect and monitor subcontractor activities to ensure compliance with the OHS management system.</li>
-          <li>Ensure that subcontractors and visitors receive safety orientation prior to entering the site.</li>
-          <li>Ensure all equipment is in safe working condition and report abnormalities immediately.</li>
-          <li>Ensure no N.D.E. is carried out if it may endanger any person.</li>
-          <li>Ensure 100% compliance with the work permit system at the site (Client and CAT).</li>
-          <li>Ensure that equipment operators are competent and hold valid certificates.</li>
-          <li>Carry out monthly inspections, including fire extinguishers, rigging, and lifting equipment.</li>
-          <li>Ensure all tools and electrical equipment are in good condition and safe to use.</li>
-          <li>Ensure scaffolding platforms and ladders are safe, secured, inspected, and tagged before use.</li>
-          <li>Ensure the jobsite is kept tidy and waste materials are removed at the end of each shift.</li>
-          <li>Stop work as per HSI 063 and the Area Manager Stop Work Authority Policy.</li>
-          <li>Participate in or conduct incident investigations, safety meetings, drills, and safety training sessions.</li>
-          <li>Assist in implementing the waste management plan at the project site and camp.</li>
-          <li>Follow and implement all written and verbal business-related instructions given by your seniors.</li>
-        </ol>
-      </div>
-
-      <button class="accordion">💡 Daily Safety Tip</button>
-      <div class="panel">
-        <ul>
-          <li>Stay hydrated during long shifts ☀️</li>
-          <li>Always wear your PPE 👷‍♂️</li>
-          <li>Report near misses promptly 🧾</li>
-          <li>Use proper lifting techniques 💪</li>
-        </ul>
-      </div>
-
-      <button class="accordion">🔗 Useful Links</button>
-      <div class="panel">
-        <ul>
-          <li><a href="https://drive.google.com/file/d/15gvUFs5ELvaUhDVTapkvGf6a5GkGEx5s/view?usp=sharing" target="_blank">📘 CSM Book</a></li>
-          <li><a href="https://drive.google.com/file/d/109vG3Hk3PdgvQF87k0EJ1IiKDTDfdQTv/view?usp=sharing" target="_blank">📗 Saudi Aramco Safety HandBook</a></li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="nav-bar">
-    <div class="nav-button" onclick="openTab(event, 'NewsTab')"><span class="nav-icon icon-news"></span><span>News</span></div>
-    <div class="nav-button" onclick="openTab(event, 'FormTab')"><span class="nav-icon icon-form"></span><span>Observation</span></div>
-    <div class="nav-button" onclick="openTab(event, 'DataTab')"><span class="nav-icon icon-data"></span><span>Safety Data</span></div>
-    <div class="nav-button" onclick="openTab(event, 'TasksTab')"><span class="nav-icon icon-tasks"></span><span>Daily Tasks</span></div>
-    <div class="nav-button" onclick="openTab(event, 'InfoTab')"><span class="nav-icon icon-info"></span><span>Info</span></div>
-  </div>
 </div>
 
 <script>
@@ -228,175 +658,279 @@
 const eomSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0Km9p6XYDDxyGYSFfUjDjhdKMtr_hFvCiJ-U5_24_-QKrGsexZ4v3dxzKp0K1XZenNsiV7CiNmQEt/pub?output=csv';
 let leaderboardData = []; // Store the fetched data here
 
+// 🛑 دالة فتح التابات (لم تتغير)
 function openTab(evt, tabName) {
-  var tabcontent = document.getElementsByClassName("tab-content");
-  var navbuttons = document.getElementsByClassName("nav-button");
-  for (var i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove('active');
-  for (var i = 0; i < navbuttons.length; i++) navbuttons[i].classList.remove("active");
-  var currentTab = document.getElementById(tabName);
-  currentTab.classList.add('active');
-  
-  var targetButton = evt.currentTarget.classList.contains('nav-button') 
-                     ? evt.currentTarget 
-                     : document.querySelector(`.nav-button[onclick*="'${tabName}'"]`);
-  if (targetButton) targetButton.classList.add("active");
+    var tabcontent = document.getElementsByClassName("tab-content");
+    var navbuttons = document.getElementsByClassName("nav-button");
+    var targetButton = evt.currentTarget || document.querySelector(`.nav-button[onclick*="'${tabName}'"]`);
+    var targetColor = targetButton ? targetButton.getAttribute('data-color') : null;
+
+    for (var i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove('active');
+    
+    for (var i = 0; i < navbuttons.length; i++) {
+        navbuttons[i].classList.remove("active");
+        navbuttons[i].style.color = ''; 
+    }
+    
+    var currentTab = document.getElementById(tabName);
+    currentTab.classList.add('active');
+
+    if (targetButton) {
+        targetButton.classList.add("active");
+        if (targetColor) {
+            targetButton.style.color = targetColor;
+        }
+    }
 }
 
 function showLeaderboardModal() {
     const modal = document.getElementById('leaderboardModal');
     const container = document.getElementById('leaderboardContainer');
-    
-    // Check if data is loaded
+
+    if (leaderboardData.length === 0 || container.innerHTML.includes('fa-spinner')) {
+        container.innerHTML = `<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading leaderboard...</div>`;
+    }
+
     if (leaderboardData.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>Loading data... Please try again in a moment.</p>";
+        fetchEOMData(true); 
     } else {
-        // Sort data by Points (descending)
-        const sortedData = [...leaderboardData].sort((a, b) => b.points - a.points);
-        
-        // Build the HTML table
-        let tableHTML = '<table id="leaderboardTable"><thead><tr><th>Rank</th><th>Safety Officer Name</th><th>Points</th></tr></thead><tbody>';
-        
-        sortedData.forEach((item, index) => {
-            tableHTML += `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${item.name}</td>
-                    <td>${item.points}</td>
-                </tr>
-            `;
-        });
-        
-        tableHTML += '</tbody></table>';
-        container.innerHTML = tableHTML;
+         renderLeaderboard();
     }
 
     modal.style.display = 'block';
+}
+
+function renderLeaderboard() {
+     const container = document.getElementById('leaderboardContainer');
+     const sortedData = [...leaderboardData].sort((a, b) => b.points - a.points);
+     // ... (HTML table generation code remains the same)
+     let tableHTML = '<table id="leaderboardTable"><thead><tr><th>Rank</th><th>Safety Officer Name</th><th>Points</th></tr></thead><tbody>';
+
+    sortedData.forEach((item, index) => {
+        tableHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.points}</td>
+            </tr>
+        `;
+    });
+
+    tableHTML += '</tbody></table>';
+    container.innerHTML = tableHTML;
 }
 
 function hideLeaderboardModal() {
     document.getElementById('leaderboardModal').style.display = 'none';
 }
 
+function showEmergencyContactsModal() {
+    const modal = document.getElementById('emergencyContactsModal');
+    modal.style.display = 'block';
+}
 
+function hideEmergencyContactsModal() {
+    document.getElementById('emergencyContactsModal').style.display = 'none';
+}
+
+// 🛑 الكود المصحح لإدارة ألوان الأكورديون (Accordion Click Handler)
 document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('accordion')) {
-    e.target.classList.toggle('activeAcc');
-    var panel = e.target.nextElementSibling;
-    panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-  }
+    const accordion = e.target.closest('.accordion');
+    
+    if (accordion) {
+        // إذا كان زر يفتح Modal (مثل Monthly Leaderboard و EMERGENCY CONTACTS)، لا نعالجه هنا
+        if (accordion.onclick) return; 
+
+        const isActive = accordion.classList.contains('activeAcc');
+        const color = accordion.getAttribute('data-color');
+        let panel = accordion.nextElementSibling;
+
+        // 1. إعادة ضبط الألوان والحالة لجميع الأكورديونات غير الخاصة بالـ Modal
+        document.querySelectorAll('.accordion').forEach(acc => {
+            if (!acc.onclick) { // نطبق إعادة الضبط فقط على الأكورديونات العادية
+                 acc.classList.remove('activeAcc');
+                 acc.style.backgroundColor = ''; 
+                 acc.style.color = ''; 
+                 // إزالة الـ inline style الخاص بـ border-color إذا كان موجوداً
+                 if(acc.nextElementSibling && acc.nextElementSibling.classList.contains('panel')) {
+                     acc.nextElementSibling.style.display = 'none';
+                     acc.nextElementSibling.style.color = ''; 
+                 }
+            }
+        });
+        
+        // 2. تفعيل الأكورديون الحالي وتطبيق الألوان
+        if (!isActive) {
+            accordion.classList.add('activeAcc');
+            
+            // تطبيق اللون المخصص على زر الأكورديون
+            if (color) {
+                // نستخدم اللون المخصص كخلفية، ونقلب لون النص إلى أبيض
+                accordion.style.backgroundColor = color;
+                accordion.style.color = 'white'; 
+            }
+            
+            if(panel && panel.classList.contains('panel')) {
+                 panel.style.display = 'block';
+                 // تطبيق اللون على Panel (لأجل border-left والنقاط)
+                 if (color) {
+                     panel.style.color = color;
+                 }
+            }
+        } 
+    }
 });
 
 (function setMonthColor() {
-  const cycle = ['Red','Blue','Yellow','Green'];
-  const startIndexMonth = 9; 
-  const m = new Date().getMonth();
-  const offset = ((m - startIndexMonth) % 4 + 4) % 4;
-  const color = cycle[offset];
-  const colorNameEl = document.getElementById('colorName');
-  if (colorNameEl) {
-    colorNameEl.textContent = color;
-    colorNameEl.style.color = color.toLowerCase();
-  }
+    const cycle = ['Red','Blue','Yellow','Green'];
+    const startIndexMonth = 9;
+    const m = new Date().getMonth();
+    const offset = ((m - startIndexMonth) % 4 + 4) % 4;
+    const color = cycle[offset];
+    const colorNameEl = document.getElementById('colorName');
+    if (colorNameEl) {
+        colorNameEl.textContent = color;
+        colorNameEl.style.color = color.toLowerCase();
+    }
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Set default tab to Info
-  const infoButton = document.querySelector('.nav-button[onclick*="InfoTab"]');
-  if(infoButton) openTab({currentTarget: infoButton}, 'InfoTab');
+function fetchEOMData(forceRender = false) {
+    fetch(eomSheetUrl)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            return res.text();
+        })
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1);
+            leaderboardData = []; 
+            let maxPoints = -1;
+            let topEmployee = '';
 
-  // --- MODAL SETUP ---
-  const eomCard = document.getElementById('eomCard');
-  const modal = document.getElementById('leaderboardModal');
-  const closeBtn = document.querySelector('.close-btn');
+            rows.forEach(row => {
+                if(row.trim() === '') return;
+                const cols = row.split(',').map(col => col.replace(/["']/g,'').trim());
 
-  if (eomCard) eomCard.addEventListener('click', showLeaderboardModal);
-  if (closeBtn) closeBtn.addEventListener('click', hideLeaderboardModal);
-  window.addEventListener('click', (event) => {
-      if (event.target == modal) hideLeaderboardModal();
-  });
-  // -------------------
+                const name = cols[0];
+                const points = parseFloat(cols[1]);
 
-  // Set the current Month and Year
-  const now = new Date();
-  const options = { month: 'long', year: 'numeric' };
-  const currentMonthYear = now.toLocaleDateString('en-US', options); 
-  const cardTitleElement = document.getElementById('eomCardTitle');
-  if (cardTitleElement) {
-    cardTitleElement.textContent = `🏆 Employee of the Month (${currentMonthYear})`;
-  }
+                if(!isNaN(points) && name.trim() !== '') {
+                    leaderboardData.push({ name: name, points: points });
 
-  // --- Employee of the Month/Leaderboard Data Fetch ---
-  fetch(eomSheetUrl)
-    .then(res => res.text())
-    .then(csvText => {
-      const rows = csvText.split('\n').slice(1);
-      let maxPoints = -1;
-      let topEmployee = '';
-      
-      rows.forEach(row => {
-        if(row.trim() === '') return;
-        const cols = row.split(',').map(col => col.replace(/["']/g,'').trim());
-        
-        const name = cols[0];
-        const points = parseFloat(cols[1]);
+                    if(points > maxPoints){
+                        maxPoints = points;
+                        topEmployee = name.trim();
+                    }
+                }
+            });
 
-        if(!isNaN(points) && name.trim() !== '') {
-            // Populate data for the modal
-            leaderboardData.push({ name: name, points: points });
+            const el = document.getElementById('employeeOfMonth');
+            if(el) el.textContent = topEmployee || 'No data (Check sheet data)';
 
-            // Find the overall top employee for the main card
-            if(points > maxPoints){
-              maxPoints = points;
-              topEmployee = name.trim();
+            if (forceRender || document.getElementById('leaderboardModal').style.display === 'block') {
+                 renderLeaderboard();
             }
+        })
+        .catch(err => {
+            const el = document.getElementById('employeeOfMonth');
+            if(el) el.textContent = 'Error loading data (Link Check)';
+
+            const leaderboardContainer = document.getElementById('leaderboardContainer');
+            if(leaderboardContainer) leaderboardContainer.innerHTML = `<p style='text-align:center; color: var(--danger-color);'>Failed to load leaderboard data.</p>`;
+
+            console.error('Error fetching Employee of the Month:', err);
+        });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 🛑 تطبيق اللون المخصص للزر النشط افتراضيًا عند تحميل الصفحة
+    const infoButton = document.querySelector('.nav-button[onclick*="InfoTab"]');
+    if(infoButton) {
+        document.getElementById('InfoTab').classList.add('active');
+        infoButton.classList.add('active');
+        const defaultColor = infoButton.getAttribute('data-color');
+        if (defaultColor) {
+            infoButton.style.color = defaultColor;
         }
-      });
-      
-      const el = document.getElementById('employeeOfMonth');
-      if(el) el.textContent = topEmployee || 'No data (Check sheet data)';
-      
-    })
-    .catch(err => {
-      const el = document.getElementById('employeeOfMonth');
-      if(el) el.textContent = 'Error loading data (Link Check)';
-      console.error('Error fetching Employee of the Month:', err);
+    }
+
+
+    const eomCard = document.getElementById('eomCard');
+    const leaderboardModal = document.getElementById('leaderboardModal');
+    const emergencyModal = document.getElementById('emergencyContactsModal');
+
+    if (eomCard) eomCard.addEventListener('click', showLeaderboardModal);
+
+    window.addEventListener('click', (event) => {
+         if (event.target == leaderboardModal) hideLeaderboardModal();
+         if (event.target == emergencyModal) hideEmergencyContactsModal();
     });
 
-  // --- Load News from Google Sheet ---
-  const newsSheetUrl = 'https://docs.google.com/spreadsheets/d/1_SwxL5f4mWF5kd2yofCMCEE_WQp_2eroHDhXXPXtw1U/export?format=csv&gid=0';
-  fetch(newsSheetUrl)
-    .then(res => res.text())
-    .then(csvText => {
-      const rows = csvText.split('\n').slice(1);
-      const container = document.getElementById('AnnouncementsContainer');
-      container.innerHTML = '';
-      rows.forEach(row => {
-        if(row.trim() === '') return;
-        
-        const [date, title, content] = row.split(','); 
-        const card = document.createElement('div');
-        card.className = 'announcement-card';
-        card.innerHTML = `
-          <div class="card-date">${date ? date.trim() : ''}</div>
-          <div class="card-title">${title ? title.trim() : ''}</div>
-          <div class="card-content" style="display:none;">${content ? content.trim() : ''}</div>
-        `;
-        container.appendChild(card);
-        
-        card.querySelector('.card-title').addEventListener('click', () => {
-          const contentDiv = card.querySelector('.card-content');
-          contentDiv.style.display = (contentDiv.style.display === 'none') ? 'block' : 'none';
+    // Set the current Month and Year
+    const now = new Date();
+    const options = { month: 'long', year: 'numeric' };
+    const currentMonthYear = now.toLocaleDateString('en-US', options);
+    const cardTitleElement = document.getElementById('eomCardTitle');
+    if (cardTitleElement) {
+        cardTitleElement.innerHTML = `<i class="fas fa-trophy" style="color: #FFD700;"></i> Employee of the Month (${currentMonthYear})`;
+    }
+
+    // --- Employee of the Month/Leaderboard Data Fetch ---
+    fetchEOMData();
+
+
+    // --- Load News from Google Sheet (Code remains the same) ---
+    const newsSheetUrl = 'https://docs.google.com/spreadsheets/d/1_SwxL5f4mWF5kd2yofCMCEE_WQp_2eroHDhXXPXtw1U/export?format=csv&gid=0';
+    fetch(newsSheetUrl)
+        .then(res => res.text())
+        .then(csvText => {
+            const rows = csvText.split('\n').slice(1);
+            const container = document.getElementById('AnnouncementsContainer');
+            container.innerHTML = ''; 
+
+            rows.forEach(row => {
+                if(row.trim() === '') return;
+
+                const parts = row.match(/(".*?"|[^,]+)/g) || [];
+                const [date, title, content] = parts.map(p => p.trim().replace(/^"|"$/g, ''));
+
+                const card = document.createElement('div');
+                card.className = 'announcement-card';
+
+                const isContentEmpty = !content || content === 'NULL';
+                const cursorStyle = isContentEmpty ? 'default' : 'pointer';
+
+                card.innerHTML = `
+                    <div class="card-date">${date || ''}</div>
+                    <div class="card-title" style="cursor: ${cursorStyle};">
+                        ${title || 'No Title'}
+                        ${!isContentEmpty ? '<i class="fas fa-chevron-down toggle-icon"></i>' : ''}
+                    </div>
+                    <div class="card-content">${content || 'No detailed content available.'}</div>
+                `;
+                container.appendChild(card);
+
+                if (!isContentEmpty) {
+                    const titleDiv = card.querySelector('.card-title');
+                    const contentDiv = card.querySelector('.card-content');
+
+                    titleDiv.addEventListener('click', () => {
+                        const isOpen = contentDiv.style.display === 'block';
+                        contentDiv.style.display = isOpen ? 'none' : 'block';
+                        titleDiv.classList.toggle('open', !isOpen);
+                    });
+                }
+            });
+        })
+        .catch(err => {
+            const container = document.getElementById('AnnouncementsContainer');
+            container.innerHTML = `<div class="announcement-card">
+                                     <div class="card-date">Error</div>
+                                     <div class="card-title" style="cursor:default;">Failed to fetch news</div>
+                                     <div class="card-content" style="display:block; color: var(--danger-color);">Check the link or network connection.</div>
+                                   </div>`;
+            console.error('Error loading news:', err);
         });
-      });
-    })
-    .catch(err => {
-      const container = document.getElementById('AnnouncementsContainer');
-      container.innerHTML = `<div class="announcement-card">
-                              <div class="card-date">Error</div>
-                              <div class="card-title">Failed to fetch news</div>
-                            </div>`;
-      console.error('Error loading news:', err);
-    });
 });
 </script>
 </body>
