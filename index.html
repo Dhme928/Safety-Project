@@ -7,7 +7,7 @@
     
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <link rel="apple-touch-icon" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
-    <link rel="icon" type="image/png" href="https://drive.google.com/uc?export=view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
+    <link rel="icon" type="image/png" href="https://drive.google.com/uc?export:view&id=1pT2_mI_B9CrnOde6YK__OzBd2gYEppXy">
     <title>My Observations App 👷🏻‍♂️</title>
     <style>
         /* 🟢 3. توحيد الألوان باستخدام متغيرات CSS */
@@ -19,7 +19,8 @@
           --border-color: #BDC3C7; /* Light grey for borders */
           --success-color: #27AE60; /* Green for success/positive */
           --danger-color: #C0392B; /* Red for danger/emergency */
-
+          --jsa-color: #3498DB; /* Blue for JSA tab */
+          
           /* متغيرات العرض الافتراضية للجوال */
           --app-max-width: 500px;
           --app-height: 90vh;
@@ -80,7 +81,8 @@
         .content-area {
             flex-grow:1;
             overflow-y:auto;
-            margin-bottom:60px; /* مساحة لشريط التنقل */
+            /* 🟢 التعديل الأول: زيادة الهامش السفلي لمنع تغطية الزر العائم للمحتوى */
+            margin-bottom:150px; /* كانت 65px */
             padding: 15px; /* Add some general padding for content */
         }
         .tab-content {
@@ -272,6 +274,73 @@
             margin-bottom: 5px;
         }
         /* نهاية تعديل القوائم */
+        
+        /* ======================================= */
+        /* === أنماط الأكورديون الخاص بـ JSA (جديد) === */
+        /* ======================================= */
+
+        /* نستخدم نفس أنماط .accordion و .panel ولكن بفئة مختلفة لضمان الفصل */
+        .jsa-accordion-item {
+            /* يرث كل أنماط .accordion */
+            cursor:pointer;
+            padding:15px 18px; 
+            width:100%;
+            text-align:left;
+            border:none;
+            outline:none;
+            transition:background-color 0.3s ease, transform 0.2s ease, color 0.3s ease; 
+            font-family: 'Lato', sans-serif;
+            font-size:15px;
+            border-radius:8px; 
+            font-weight:700;
+            display: flex;
+            align-items: center;
+            margin-top: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            /* أنماط خاصة به */
+            background-color: var(--accent-light);
+            color: var(--secondary-color);
+        }
+        .jsa-accordion-item:hover {
+            background-color:#E0E5E9; 
+            transform: translateY(-2px);
+        }
+        .jsa-accordion-item i {
+            margin-inline-end: 12px;
+            font-size: 19px;
+            color: inherit !important; 
+            transition: color 0.3s ease;
+        }
+        /* تفعيل الأكورديون (تم تركه للتحكم بواسطة JS) */
+        .jsa-accordion-item.activeAcc {
+            transform: translateY(-2px);
+        }
+
+
+        .jsa-panel {
+            /* يرث كل أنماط .panel */
+            padding:15px 18px; 
+            display:none;
+            background-color:white;
+            overflow-y:auto;
+            border-left:5px solid currentColor; /* مهم: ليرث اللون */
+            margin-top:8px;
+            border-radius:0 8px 8px 0; 
+            max-height:500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+
+        /* تعديل النقاط لـ JSA Panel */
+        .jsa-panel ul li:before {
+            content:"\2022";
+            color: currentColor; 
+            font-weight:bold;
+            display:inline-block;
+            width:1em;
+            margin-left: -1em;
+        }
+        /* نهاية أنماط أكورديون JSA */
+        
 
         /* === شريط التنقل - الألوان المخصصة و التحسينات === */
         .nav-bar {
@@ -294,7 +363,7 @@
             color:var(--text-muted); /* Muted color for inactive */
             font-size:12px; /* Slightly larger font */
             cursor:pointer;
-            width:20%;
+            width:20%; /* 5 buttons = 20% each */
             transition:color 0.3s ease, transform 0.2s ease;
             position: relative;
             font-family: 'Lato', sans-serif;
@@ -332,7 +401,7 @@
         }
         .loading-spinner i { margin-right: 10px; font-size: 24px; }
 
-        /* MODAL STYLES (لم يتم تغييرها) */
+        /* MODAL STYLES */
         .modal {
             display: none; position: fixed; z-index: 20; left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
             background-color: rgba(0,0,0,0.6); 
@@ -364,6 +433,91 @@
         #emergencyContactsModal h3 { color: var(--secondary-color); font-family: 'Poppins', sans-serif; }
 
 
+        /* 🆕 CSS for Floating Button (Add New Observation) */
+        #addObservationButton {
+            position: fixed;
+            bottom: 85px; /* Adjust based on nav-bar height (65px) + desired gap */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15; /* Above nav bar but below modals */
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px; /* Fully rounded */
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: var(--app-max-width); /* To limit its width within the app container */
+            width: calc(100% - 60px); /* Adjust width to fit the container with margin */
+            justify-content: center;
+        }
+        #addObservationButton:hover {
+            background-color: #E86A00; /* Slightly darker orange */
+            transform: translateX(-50%) scale(1.03);
+        }
+        /* End Floating Button CSS */
+        
+        /* 🆕 CSS for JSA Tab Search Bar */
+        #jsaSearch {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #jsaSearch:focus {
+            border-color: var(--jsa-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            outline: none;
+        }
+        
+        /* ------------------------------------- */
+        /* 🟢 أنماط النافذة المنبثقة لتأكيد JSA */
+        /* ------------------------------------- */
+        #jsaConfirmationModal .modal-content {
+            margin: 15% auto; 
+            padding: 20px;
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center;
+        }
+        #jsaConfirmationModal h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--jsa-color);
+            margin-top: 0;
+        }
+        #jsaConfirmationModal p {
+            color: var(--secondary-color);
+            font-size: 15px;
+            margin: 20px 0;
+        }
+        .drive-button {
+            display: block;
+            padding: 12px 20px;
+            margin-top: 25px;
+            background-color: var(--jsa-color); 
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .drive-button:hover {
+            background-color: #2980b9;
+        }
+        
+        
         /* Keyframe Animations */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -399,14 +553,21 @@
             }
 
             /* مساحة المحتوى */
+             /* 🟢 التعديل الأول: تطبيق الهامش الإضافي على الكمبيوتر أيضاً */
             .content-area {
-                margin-bottom: 65px; 
+                margin-bottom: 150px; 
             }
 
             /* شريط التنقل يتبع العرض الجديد للحاوية */
             .nav-bar {
                 max-width: var(--app-max-width);
                 border-radius: 0 0 12px 12px;
+            }
+            
+            /* Floating Button for Desktop */
+            #addObservationButton {
+                 max-width: 400px; /* Limit width on desktop */
+                 width: auto;
             }
 
             /* Flexbox for better modal centering on desktop */
@@ -455,23 +616,23 @@
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">HARADH CLINIC</td><td style="border: 1px solid var(--border-color); padding: 8px;">Haradh Clinic</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0569180911">056 918 0911</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Maher A. Jardali</td><td style="border: 1px solid var(--border-color); padding: 8px;">Operation Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505817134">050 581 7134</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Rifat Mehmood</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505366873">050 536 6873</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahzad Ahmad Khan</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0543133645">054 313 3645</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahzad Ahmad Khan</td><td style="border: 1.5px solid var(--border-color); padding: 8px;">HSSE Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0543133645">054 313 3645</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Mahmoud Al Cheikh</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0551367496">055 136 7496</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Adnan Ghemrawi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer (Hydrotest)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0500291404">050 029 1404</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hassan El Cherbagi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0539039724">053 903 9724</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hadi Hamdi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Mechanical Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0508838541">050 883 8541</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Imad El Hage</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project PMV Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0553713952">055 371 3952</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Rabih Hassan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Civil Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0504838832">050 483 8832</a></td></tr>
+                    <tr><td style="border: 1.5px solid var(--border-color); padding: 8px;">Rabih Hassan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Civil Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0504838832">050 483 8832</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Om Prakash</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0544303677">054 430 3677</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Tauqeer Nabi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Environmental Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0595820934">059 582 0934</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Irfan Haider</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Supervisor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0590654748">059 065 4748</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Taha Ghemrawi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Transport Officer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0539195375">053 919 5375</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Abdul Karim</td><td style="border: 1px solid var(--border-color); padding: 8px;">Material Supervisor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0502884442">050 288 4442</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Abdul Karim</td><td style="border: 1px solid var(--border-color); padding: 8px;">Material Supervisor</td><td style="border: 1.5px solid var(--border-color); padding: 8px;"><a href="tel:0502884442">050 288 4442</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Arif Khan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Safety officer/BLS/First Ajder</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0576563119">057 656 3119</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Dr. Ahmed Hussein</td><td style="border: 1px solid var(--border-color); padding: 8px;">CAT Doctor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0562535421">056 253 5421</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Romelle M. Pagayon</td><td style="border: 1px solid var(--border-color); padding: 8px;">Male Nurse</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0531551924">053 155 1924</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Joe Franco V. Yabut</td><td style="border: 1px solid var(--border-color); padding: 8px;">CAT First aider</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0506735217">050 673 5217</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahid Bhatti</td><td style="border: 1px solid var(--border-color); padding: 8px;">Ambulance Driver</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0593886520">059 388 6520</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Joe Franco V. Yabut</td><td style="border: 1px solid var(--border-color); padding: 8px;">CAT First aider</td><td style="border: 1.5px solid var(--border-color); padding: 8px;"><a href="tel:0506735217">050 673 5217</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahid Bhatti</td><td style="border: 1.5px solid var(--border-color); padding: 8px;">Ambulance Driver</td><td style="border: 1.5px solid var(--border-color); padding: 8px;"><a href="tel:0593886520">059 388 6520</a></td></tr>
                 </tbody>
             </table>
         </div>
@@ -489,12 +650,25 @@
             <tbody>
                 <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Southern Area (Abqaiq)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135720911">013 572 0911</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Civil Defense (Fire)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:998">998</a></td></tr>
                 <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Nadec Hospital (Haradh)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135849000">013 584 9000</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Red Crescent (Ambulance)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:997">997</a></td></tr>
-                <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Al Ahsa Hospital (Al Hofuf)</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0135844000">013 584 4000</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Local Police</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:999">999</a></td></tr>
+                <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Al Ahsa Hospital (Al Hofuf)</td><td style="border: 1.5px solid var(--border-color); padding: 8px;"><a href="tel:0135844000">013 584 4000</a></td><td style="border: 1px solid var(--border-color); padding: 8px;">Local Police</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:999">999</a></td></tr>
                 <tr><td></td><td></td><td style="border: 1px solid var(--border-color); padding: 8px;">Local Traffic Accident</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:993">993</a></td></tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<div id="jsaConfirmationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="hideJSAConfirmationModal()">&times;</span>
+        <h2>فتح مستند تحليل سلامة العمل (JSA)</h2>
+        <p>سيتم نقلك إلى مستند Google Drive. هل أنت متأكد من رغبتك في المتابعة؟</p>
+        
+        <a id="driveLinkConfirm" href="#" target="_blank" class="drive-button">
+            ✅ نعم، افتح المستند في Google Drive
+        </a>
+    </div>
+</div>
+
 
 <div class="app-container">
     <div class="header"><span>My Observations App 👷🏻‍♂️</span></div>
@@ -508,10 +682,10 @@
                 </div>
                 </div>
         </div>
-
+        
         <div id="FormTab" class="tab-content">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfYED_4UfHcmWn0fQOjtR5s8A0-Bhr4dwpe-80GjKkLeTR_Lw/viewform?embedded=true"></iframe>
-        </div>
+            <h3 style="text-align:center; color:var(--primary-color);">Click the floating button "Add New Observation" to open the form.</h3>
+            </div>
 
         <div id="DataTab" class="tab-content">
             <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTXlN-sE-IkQJLMaVOvRGSBYNLsDvwZTD15w7rarTIXBGoacF0C5_eiI7OmFs__zA8jtlwhy0ULLZ8N/pubhtml"></iframe>
@@ -520,7 +694,12 @@
         <div id="TasksTab" class="tab-content">
             <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSezm0wWTdEsvkIdnzhfpRf0G37tZzqbY-AF-BHfbXXiLr2rKA/viewform?embedded=true"></iframe>
         </div>
-
+        
+        <div id="JSATab" class="tab-content">
+            <input type="text" id="jsaSearch" placeholder="Search JSA titles (e.g., Loading unloading)...">
+            <div id="jsaListContainer">
+                </div>
+        </div>
         <div id="InfoTab" class="tab-content active"> 
             <div class="info-month"> The Color Code of This Month is: <span id="colorName">...</span></div>
 
@@ -630,15 +809,15 @@
         </div>
 
     </div>
+    
+    <a id="addObservationButton" href="https://docs.google.com/forms/d/e/1FAIpQLSfYED_4UfHcmWn0fQOjtR5s8A-Bhr4dwpe-80GjKkLeTR_Lw/viewform" target="_blank">
+        <i class="fas fa-plus"></i> Add New Observation
+    </a>
 
     <div class="nav-bar">
         <div class="nav-button" data-color="#17a2b8" onclick="openTab(event, 'NewsTab')">
             <span class="nav-icon"><i class="fas fa-bullhorn"></i></span>
             <span>News</span>
-        </div>
-        <div class="nav-button" data-color="var(--primary-color)" onclick="openTab(event, 'FormTab')">
-            <span class="nav-icon"><i class="fas fa-pen-to-square"></i></span>
-            <span>Observation</span>
         </div>
         <div class="nav-button" data-color="var(--success-color)" onclick="openTab(event, 'DataTab')">
             <span class="nav-icon"><i class="fas fa-chart-line"></i></span>
@@ -647,6 +826,10 @@
         <div class="nav-button" data-color="#6f42c1" onclick="openTab(event, 'TasksTab')">
             <span class="nav-icon"><i class="fas fa-list-check"></i></span>
             <span>Daily Tasks</span>
+        </div>
+        <div class="nav-button" data-color="var(--jsa-color)" onclick="openTab(event, 'JSATab')">
+            <span class="nav-icon"><i class="fas fa-handshake"></i></span>
+            <span>JSA</span>
         </div>
         <div class="nav-button active" data-color="var(--danger-color)" onclick="openTab(event, 'InfoTab')"> 
             <span class="nav-icon"><i class="fas fa-circle-info"></i></span>
@@ -660,12 +843,25 @@
 const eomSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0Km9p6XYDDxyGYSFfUjDjhdKMtr_hFvCiJ-U5_24_-QKrGsexZ4v3dxzKp0K1XZenNsiV7CiNmQEt/pub?output=csv';
 let leaderboardData = []; // Store the fetched data here
 
+// JSA Data structure: { title: "JSA Title", link: "Google Drive Link" }
+const jsaData = [
+     { title: "Mobile Crane Operation", link: "https://drive.google.com/file/d/1fEK4a16-l9DOPcAzmUfKwjWjMkefy2Yz/view?" },
+    { title: "Threading & Bending of Pipe Using Threading Machine", link: "https://drive.google.com/file/d/1s6YuKlgJwzlJXX-y-IStKX-8ZPPRsinZ/view?usp=drivesdk" },
+    { title: "Welding, Cutting, Grinding & Drilling Activity", link: "https://drive.google.com/file/d/1l7FSBkX0vYrueQFhw3zZ6gofwp_u-zCp/view?usp=drivesdk" },
+    { title: "Loading & Unloading Activity Using Fork", link: "https://drive.google.com/file/d/1qX1aw1BTySOnECTnDK0s1d1iY3ta2H7_/view?usp=drivesdk" }
+];
+
+
 // 🛑 دالة فتح التابات (لم تتغير)
 function openTab(evt, tabName) {
     var tabcontent = document.getElementsByClassName("tab-content");
     var navbuttons = document.getElementsByClassName("nav-button");
     var targetButton = evt.currentTarget || document.querySelector(`.nav-button[onclick*="'${tabName}'"]`);
     var targetColor = targetButton ? targetButton.getAttribute('data-color') : null;
+    
+    // Hide the floating button for all tabs EXCEPT FormTab (though we removed FormTab, it's safer to keep this logic)
+    // The button should be visible all the time in the new design. It's safe to keep it visible.
+    // document.getElementById('addObservationButton').style.display = (tabName === 'FormTab' ? 'none' : 'block');
 
     for (var i = 0; i < tabcontent.length; i++) tabcontent[i].classList.remove('active');
     
@@ -735,6 +931,11 @@ function hideEmergencyContactsModal() {
     document.getElementById('emergencyContactsModal').style.display = 'none';
 }
 
+// 🟢 دالة إغلاق Modal تأكيد JSA الجديدة (تم الحفاظ عليها بالرغم من عدم استخدامها الآن)
+function hideJSAConfirmationModal() {
+    document.getElementById('jsaConfirmationModal').style.display = 'none';
+}
+
 // 🛑 الكود المصحح لإدارة ألوان الأكورديون (Accordion Click Handler)
 document.addEventListener('click', function(e) {
     const accordion = e.target.closest('.accordion');
@@ -747,9 +948,10 @@ document.addEventListener('click', function(e) {
         const color = accordion.getAttribute('data-color');
         let panel = accordion.nextElementSibling;
 
-        // 1. إعادة ضبط الألوان والحالة لجميع الأكورديونات غير الخاصة بالـ Modal
+        // 1. إعادة ضبط الألوان والحالة لجميع الأكورديونات غير الخاصة بالـ Modal وغير JSA
         document.querySelectorAll('.accordion').forEach(acc => {
-            if (!acc.onclick) { // نطبق إعادة الضبط فقط على الأكورديونات العادية
+            // نتحقق من فئة 'jsa-accordion-item' أيضاً لعدم تدخل أكورديون InfoTab مع JSA
+            if (!acc.onclick && !acc.classList.contains('jsa-accordion-item')) { 
                  acc.classList.remove('activeAcc');
                  acc.style.backgroundColor = ''; 
                  acc.style.color = ''; 
@@ -762,7 +964,7 @@ document.addEventListener('click', function(e) {
         });
         
         // 2. تفعيل الأكورديون الحالي وتطبيق الألوان
-        if (!isActive) {
+        if (!isActive && !accordion.classList.contains('jsa-accordion-item')) {
             accordion.classList.add('activeAcc');
             
             // تطبيق اللون المخصص على زر الأكورديون
@@ -843,6 +1045,92 @@ function fetchEOMData(forceRender = false) {
         });
 }
 
+// 🟢 التعديل الثالث: تعديل دالة JSA List لإنشاء أكورديون داخلي
+function renderJSAList(data) {
+    const container = document.getElementById('jsaListContainer');
+    container.innerHTML = ''; // Clear existing list
+    const jsaColor = getComputedStyle(document.documentElement).getPropertyValue('--jsa-color');
+
+    if (data.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color: var(--text-muted); margin-top:20px;">No matching JSA found.</p>`;
+        return;
+    }
+
+    data.forEach(item => {
+        // 1. إنشاء زر الأكورديون (الرأس)
+        const button = document.createElement('button');
+        // نستخدم 'accordion' ولكن بفئة 'jsa-accordion-item' لتمييزه
+        button.className = 'accordion jsa-accordion-item'; 
+        button.setAttribute('data-color', jsaColor);
+        // نستخدم <i> عادية هنا لتطبق عليها أنماط .jsa-accordion-item i 
+        button.innerHTML = `<i class="fas fa-file-pdf"></i> ${item.title}`; 
+        
+        // 2. إنشاء محتوى الأكورديون (الـ panel)
+        const panel = document.createElement('div');
+        // نستخدم 'panel' ولكن بفئة 'jsa-panel' لتمييزه
+        panel.className = 'panel jsa-panel'; 
+        
+        // 3. بناء الرابط داخل قائمة داخل الـ panel
+        panel.innerHTML = `
+            <ul>
+                <li>
+                    <a href="${item.link}" target="_blank" style="color:${jsaColor}; font-weight:bold; text-decoration:none;">
+                        🔗 Open JSA Document (${item.title})
+                    </a>
+                </li>
+            </ul>
+        `;
+        
+        container.appendChild(button);
+        container.appendChild(panel);
+
+        // 4. إضافة معالج الحدث (Event Listener) لتشغيل وظيفة الأكورديون
+        button.addEventListener('click', function() {
+            // نستخدم نفس منطق الأكورديون ولكن نحدده على فئة jsa-accordion-item فقط
+            const isActive = this.classList.contains('activeAcc');
+            
+            // إعادة ضبط الألوان والحالة لجميع الأكورديونات JSA غير النشطة
+            document.querySelectorAll('.jsa-accordion-item').forEach(acc => {
+                 if (acc !== this) {
+                     acc.classList.remove('activeAcc');
+                     acc.style.backgroundColor = ''; 
+                     acc.style.color = ''; 
+                     if(acc.nextElementSibling && acc.nextElementSibling.classList.contains('jsa-panel')) {
+                         acc.nextElementSibling.style.display = 'none';
+                     }
+                 }
+            });
+
+            // تفعيل أو إلغاء تفعيل العنصر الحالي
+            if (!isActive) {
+                this.classList.add('activeAcc');
+                this.style.backgroundColor = jsaColor;
+                this.style.color = 'white';
+                panel.style.display = 'block';
+                panel.style.color = jsaColor; // لضبط لون الخط الجانبي والنقاط
+            } else {
+                this.classList.remove('activeAcc');
+                this.style.backgroundColor = '';
+                this.style.color = '';
+                panel.style.display = 'none';
+            }
+        });
+    });
+}
+
+function filterJSAList() {
+    const searchTerm = document.getElementById('jsaSearch').value.toLowerCase().trim();
+    if (!searchTerm) {
+        renderJSAList(jsaData); // Show all if no search term
+        return;
+    }
+
+    const filteredData = jsaData.filter(jsa => 
+        jsa.title.toLowerCase().includes(searchTerm)
+    );
+
+    renderJSAList(filteredData);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // 🛑 تطبيق اللون المخصص للزر النشط افتراضيًا عند تحميل الصفحة
@@ -860,13 +1148,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const eomCard = document.getElementById('eomCard');
     const leaderboardModal = document.getElementById('leaderboardModal');
     const emergencyModal = document.getElementById('emergencyContactsModal');
+    const jsaConfirmationModal = document.getElementById('jsaConfirmationModal');
+
 
     if (eomCard) eomCard.addEventListener('click', showLeaderboardModal);
 
     window.addEventListener('click', (event) => {
+         // 🟢 إضافة Modal تأكيد JSA لآلية الإغلاق
          if (event.target == leaderboardModal) hideLeaderboardModal();
          if (event.target == emergencyModal) hideEmergencyContactsModal();
+         if (event.target == jsaConfirmationModal) hideJSAConfirmationModal();
     });
+    
+    // 🟢 إضافة معالج حدث لزر التأكيد داخل Modal الـ JSA (تم إبقاؤه لكنه لن يُستخدم الآن)
+    document.getElementById('driveLinkConfirm').addEventListener('click', () => {
+        // نغلق الـ modal بعد الضغط على الرابط (لأنه سيفتح في نافذة جديدة)
+        hideJSAConfirmationModal();
+    });
+
 
     // Set the current Month and Year
     const now = new Date();
@@ -879,6 +1178,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Employee of the Month/Leaderboard Data Fetch ---
     fetchEOMData();
+
+    // --- JSA Tab Initialization ---
+    renderJSAList(jsaData);
+    document.getElementById('jsaSearch').addEventListener('input', filterJSAList);
 
 
     // --- Load News from Google Sheet (Code remains the same) ---
