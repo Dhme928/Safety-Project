@@ -845,10 +845,41 @@ let leaderboardData = []; // Store the fetched data here
 
 // JSA Data structure: { title: "JSA Title", link: "Google Drive Link" }
 const jsaData = [
-     { title: "Mobile Crane Operation", link: "https://drive.google.com/file/d/1fEK4a16-l9DOPcAzmUfKwjWjMkefy2Yz/view?" },
-    { title: "Threading & Bending of Pipe Using Threading Machine", link: "https://drive.google.com/file/d/1s6YuKlgJwzlJXX-y-IStKX-8ZPPRsinZ/view?usp=drivesdk" },
-    { title: "Welding, Cutting, Grinding & Drilling Activity", link: "https://drive.google.com/file/d/1l7FSBkX0vYrueQFhw3zZ6gofwp_u-zCp/view?usp=drivesdk" },
-    { title: "Loading & Unloading Activity Using Fork", link: "https://drive.google.com/file/d/1qX1aw1BTySOnECTnDK0s1d1iY3ta2H7_/view?usp=drivesdk" }
+        { title: "Abrasive Blasting And Coating", link: "https://drive.google.com/file/d/1tZBj37GGJ7h9uRYDI5TIL04OkNrEMoLu/view?usp=drivesdk" },
+        { title: "Backfilling Levelling And Compaction", link: "https://drive.google.com/file/d/1I32miHCfXBzETNx5UePxwHY4f9Fi-Fd1/view?usp=drivesdk" },
+         { title: "Backfilling Levelling And Compaction Around Cellar", link: "https://drive.google.com/file/d/1Fiei1faeqkuNCxR_-FMOlBF66w1ELC-0/view?usp=drivesdk" },
+        { title: "Bolt Tightening And Torquing Activity", link: "https://drive.google.com/file/d/1iEyD5UObnaZ0TppEgmsAI-I0ELzJz7ce/view?usp=drivesdk" },
+        { title: "Concrete-Rock Breaking Using Jackhammer Near X-Mas Tree", link: "https://drive.google.com/file/d/1YlO786qpo1mSVZVumvLFE3PQIKHGQPUk/view?usp=drivesdk" },
+        { title: "Construction Of Anchor", link: "https://drive.google.com/file/d/1PB8DeTYv3HbdlTSVdWWGtWYl5gJBmrIL/view?usp=drivesdk" },
+        { title: "Construction Of Burn Pit", link: "https://drive.google.com/file/d/1__bqRlMFSgajPvS6oED9aEUBrwtSr-Bu/view?usp=drivesdk" },
+        { title: "Construction Of Burn Pit Steps", link: "https://drive.google.com/file/d/1XC1vj7NElbWebkcabBR-9DjzCkYrzE0P/view?usp=drivesdk" },
+        { title: "Construction Of Cellar", link: "https://drive.google.com/file/d/15h6wy8n7-Ln62Q2wCn4tt0vFsgORn4pM/view?usp=drivesdk" },
+        { title: "Construction Of Fence", link: "https://drive.google.com/file/d/1jC5ueNSMMf-FajaZbWUAfDKqeUclf424/view?usp=drivesdk" },
+        { title: "Crane Operation", link: "https://drive.google.com/file/d/1gIrFbzHOc7UJ0Xn8g90B-V7gfodsZERp/view?usp=drivesdk" },
+        { title: "Cutting And Removing Of Steel Cellar", link: "https://drive.google.com/file/d/18olhXtw1lv-Vaiy9BzM322aMzaESqx5j/view?usp=drivesdk" },
+        { title: "E And I Activity", link: "https://drive.google.com/file/d/1Bkn9C9pdeI1RLbIwexKcrODbHhUoPeYA/view?usp=drivesdk" },
+        { title: "Excavation Around Steel Cellar", link: "https://drive.google.com/file/d/1e9oPOsHb86VB98WWXLnXgSchM90wOLu8/view?usp=drivesdk" },
+        { title: "Excavation For Foundation, Riser, And Anchor", link: "https://drive.google.com/file/d/1jERBdkEd9qmRx681gsr9hNVriuAxstoZ/view?usp=drivesdk" },
+        { title: "Excavation For Well Head Trenches", link: "https://drive.google.com/file/d/1LQpvjINei7UpB9EDTWWrfBD-kImbDe3B/view?usp=drivesdk" },
+        { title: "Final Levelling And Compaction", link: "https://drive.google.com/file/d/1UuyTcFwx2Xri58-WyA5YhkEgUuVYcrR9/view?usp=drivesdk" },
+        { title: "Grouting Activity", link: "https://drive.google.com/file/d/1_Z9N9nmllUffi0wQonQjKYGAXKOQVdMO/view?usp=drivesdk" },
+        { title: "Hand Excavation For Exposing Existing Ug Facility", link: "https://drive.google.com/file/d/1tADi51OZAgwGoIFpAul1uyq4z4WKGsTO/view?usp=drivesdk" },
+        { title: "Leak Testing For Tubing", link: "https://drive.google.com/file/d/1yvHoWnV1tc_zN7k4vCp_girvot7QQeZv/view?usp=drivesdk" },
+        { title: "Levelling And Compaction For Anchor Base", link: "https://drive.google.com/file/d/1nU2f6qvX-JWTozC4xz0M3OVGOURGGKsv/view?usp=drivesdk" },
+        { title: "Levelling And Compaction For Cellar Base", link: "https://drive.google.com/file/d/1Mp77FAgB9Lfh7C6hmeW4KjGo_W3qmPcx/view?usp=drivesdk" },
+        { title: "Loading & Unloading Activity Using Fork", link: "https://drive.google.com/file/d/1qX1aw1BTySOnECTnDK0s1d1iY3ta2H7_/view?usp=drivesdk" },
+        { title: "Mobilization Demobilization", link: "https://drive.google.com/file/d/1wwMo2li6LxdkvRkULe5h5tQ0IdjE0OTP/view?usp=drivesdk" },
+        { title: "Mobile Crane Operation", link: "https://drive.google.com/file/d/1fEK4a16-l9DOPcAzmUfKwjWjMkefy2Yz/view?usp=drivesdk" },
+        { title: "Pre Commissioning And I-O Mapping Activity", link: "https://drive.google.com/file/d/1DtPI-d6rb9fGyuAxOQ_w1z6yNMLpYfZG/view?usp=drivesdk" },
+        { title: "Scaffold Erection - Dismantling", link: "https://drive.google.com/file/d/1feJtE40cX2bxdWJxoDgHrHEiqbip0ouo/view?usp=drivesdk" },
+        { title: "Shutdown Activity", link: "https://drive.google.com/file/d/1RsZuqzBAVFmzl3awpk7b_X0CZrvktZE9/view?usp=drivesdk" },
+        { title: "Survey Activity", link: "https://drive.google.com/file/d/10NWWZaHMJ7yl3bh9z6hNU14UUkpx2Pd1/view?usp=drivesdk" },
+        { title: "Threading & Bending Of Pipe Using Threading Machine", link: "https://drive.google.com/file/d/1s6YuKlgJwzlJXX-y-IStKX-8ZPPRsinZ/view?usp=drivesdk" },
+        { title: "Welding, Cutting, Grinding & Drilling Activity", link: "https://drive.google.com/file/d/1l7FSBkX0vYrueQFhw3zZ6gofwp_u-zCp/view?usp=drivesdk" },
+        { title: "Welding Cutting And Grinding Activity", link: "https://drive.google.com/file/d/1BF3wr5G-M1ZQM4jRUtRlpXRoehyPYy2B/view?usp=drivesdk" },
+        { title: "Working At Height", link: "https://drive.google.com/file/d/1q_IvI7ZVb-2JmL1S2xP4kyhKz14V1Jv3/view?usp=drivesdk" },
+        { title: "Xray And Pmi", link: "https://drive.google.com/file/d/1VglyFHzLiNFCBBQrG00vQ1lW3OtsQNfk/view?usp=drivesdk" }
+
 ];
 
 
