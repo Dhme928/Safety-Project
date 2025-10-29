@@ -12,6 +12,7 @@
     <style>
         /* 🟢 3. توحيد الألوان باستخدام متغيرات CSS */
         :root {
+          /* Light Mode Colors (Defaults) */
           --primary-color: #FF6F00; /* Darker, richer orange */
           --secondary-color: #2C3E50; /* Dark blue/almost black */
           --accent-light: #ECF0F1; /* Light grey for subtle backgrounds */
@@ -20,12 +21,45 @@
           --success-color: #27AE60; /* Green for success/positive */
           --danger-color: #C0392B; /* Red for danger/emergency */
           --jsa-color: #3498DB; /* Blue for JSA tab */
+          --background-color: #FFFFFF; /* Main white background */
+          --body-background-color: var(--accent-light); /* Off-white for body */
+          --text-color: #2C3E50; /* Main text color */
+          --card-background: #FFFFFF; /* Card/Panel background */
+          --modal-background: #fefefe; /* Modal content background */
+          --hover-background: #E0E5E9; /* Hover on accordion/button */
+          --header-background-color: red /* 🆕 خلفية الهيدر في الوضع الفاتح */
           
+          /* Dark Mode Colors (Custom Properties) */
+          --dark-bg: #1e1e1e;
+          --dark-card-bg: #2d2d2d;
+          --dark-text: #f0f0f0;
+          --dark-muted-text: #a0a0a0;
+          --dark-border: #444444;
+          --dark-hover-bg: #3c3c3c;
+
+
           /* متغيرات العرض الافتراضية للجوال */
           --app-max-width: 500px;
           --app-height: 90vh;
           --app-margin: 0 auto;
         }
+
+        /* 🌙 Dark Mode Override */
+        .dark-mode {
+            --background-color: var(--dark-card-bg); 
+            --body-background-color: var(--dark-bg);
+            --text-color: var(--dark-text);
+            --text-muted: var(--dark-muted-text); 
+            --border-color: var(--dark-border);
+            --card-background: var(--dark-card-bg);
+            --accent-light: var(--dark-hover-bg); 
+            --modal-background: var(--dark-card-bg);
+            --secondary-color: var(--dark-text); /* Use light text color for secondary elements (e.g. header text) */
+            --hover-background: var(--dark-hover-bg);
+            --app-container-shadow: 0 8px 20px rgba(255,255,255,0.05); /* Lighter shadow for dark mode */
+            --header-background-color: #1a1a1a; /* 🛑 خلفية الهيدر الداكنة */
+        }
+
 
         /* ======================================= */
         /* === القواعد الافتراضية (الجوال أولاً) === */
@@ -35,9 +69,11 @@
             font-family: 'Lato', sans-serif; /* Body text font */
             margin:0;
             padding:0;
-            background-color:var(--accent-light);
+            background-color:var(--body-background-color); /* متغير جديد */
             height:100vh;
             overflow:hidden;
+            color: var(--text-color); /* لون النص الافتراضي */
+            transition: background-color 0.3s, color 0.3s; /* لتنعيم الانتقال */
         }
         .app-container {
             display:flex;
@@ -45,18 +81,19 @@
             height: var(--app-height);
             max-width: var(--app-max-width); /* حجم الجوال */
             margin: var(--app-margin);
-            background-color:white;
-            box-shadow:0 8px 20px rgba(0,0,0,0.1); /* Softer, larger shadow */
+            background-color:var(--background-color); /* متغير جديد */
+            box-shadow:var(--app-container-shadow, 0 8px 20px rgba(0,0,0,0.1)); /* متغير جديد */
             border-radius: 12px; /* More rounded corners */
             overflow: hidden; /* لمنع بروز العناصر خارج الحدود */
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
         .header {
             text-align:center;
-            padding:18px 15px; /* Slightly more padding */
+            padding:20px 20px; /* Slightly more padding */
             font-family: 'Poppins', sans-serif; /* Heading font */
             font-size:20px; /* Slightly larger */
             font-weight:700; /* Heavier weight for impact */
-            background-color:var(--secondary-color);
+            background-color:var(--header-background-color); /* 🛑 تم التعديل هنا */
             color:white;
             border-bottom:3px solid var(--primary-color); /* Thicker accent line */
             position: relative; /* For the gradient effect */
@@ -70,7 +107,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255,111,0,0.1) 0%, rgba(44,62,80,0.1) 100%);
+            /* نستخدم نفس الألوان ولكن بشفافية */
+            background: linear-gradient(135deg, rgba(255,111,0,0.1) 0%, var(--secondary-color, rgba(44,62,80,0.1)) 100%);
             z-index: 0;
         }
         .header span {
@@ -110,7 +148,7 @@
 
         /* 🟢 2. تعديل بطاقة الأخبار لـ UX */
         .announcement-card {
-            background-color:white;
+            background-color:var(--card-background); /* متغير جديد */
             border-radius:10px; /* More rounded */
             margin-bottom:15px; /* More space */
             padding:18px; /* More padding */
@@ -118,7 +156,10 @@
             border-left:6px solid var(--primary-color); /* Thicker accent border */
             cursor:pointer;
             position: relative;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s;
+        }
+        .dark-mode .announcement-card {
+            box-shadow:0 4px 10px rgba(255,255,255,0.05);
         }
         .announcement-card:hover {
             transform: translateY(-3px);
@@ -127,7 +168,7 @@
         .card-title {
             font-family: 'Poppins', sans-serif;
             font-weight:600;
-            color:var(--secondary-color);
+            color:var(--text-color); /* متغير جديد */
             font-size:17px;
             padding-right: 35px; /* Space for icon */
             position: relative;
@@ -143,7 +184,7 @@
         }
         .card-content {
             font-size:14px;
-            color:#444;
+            color:var(--text-color); /* متغير جديد */
             display:none;
             text-align:justify;
             margin-top: 10px;
@@ -171,11 +212,11 @@
             font-weight:700;
             margin:10px 0 16px 0;
             text-align:center;
-            color: var(--secondary-color);
+            color: var(--text-color); /* متغير جديد */
         }
         .accordion {
             background-color:var(--accent-light);
-            color:var(--secondary-color); /* اللون الافتراضي للنص */
+            color:var(--text-color); /* اللون الافتراضي للنص */
             cursor:pointer;
             padding:15px 18px; /* More padding */
             width:100%;
@@ -194,7 +235,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
         }
         .accordion:hover {
-            background-color:#E0E5E9; /* Slightly darker on hover */
+            background-color:var(--hover-background); /* متغير جديد */
             transform: translateY(-2px);
         }
         /* 🛑 التعديل هنا: عند تفعيل الأكورديون - سيتم تجاوزه بالـ JS لتطبيق اللون الديناميكي */
@@ -232,14 +273,18 @@
         .panel {
             padding:15px 18px; /* More padding */
             display:none;
-            background-color:white;
+            background-color:var(--card-background); /* متغير جديد */
             overflow-y:auto;
             /* 🛑 التعديل هنا: الخط الجانبي يرث اللون المخصص */
             border-left:5px solid currentColor; 
-            margin-top:8px;
+            margin-top:10px;
             border-radius:0 8px 8px 0; /* Only right/bottom rounded for accent */
             max-height:500px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .dark-mode .panel {
+             box-shadow: 0 2px 8px rgba(255,255,255,0.05);
         }
         .panel ul, .panel ol {
             padding-left: 28px; /* Adjust padding for list items */
@@ -249,8 +294,10 @@
         .panel ul li, .panel ol li {
             margin-bottom: 6px;
             line-height: 1.5;
-            color: #333;
+            color: var(--text-color); /* متغير جديد */
         }
+/* (بقية أنماط القوائم كما هي) */
+/* (تكملة أنماط CSS من الجزء الأول) */
 
         /* 🛠️ التعديل هنا: تطبيق النقاط البرتقالية فقط على القوائم غير المرقمة (<ul>) */
         .panel ul li:before {
@@ -295,14 +342,14 @@
             font-weight:700;
             display: flex;
             align-items: center;
-            margin-top: 12px;
+            margin-top: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
             /* أنماط خاصة به */
             background-color: var(--accent-light);
-            color: var(--secondary-color);
+            color: var(--text-color); /* متغير جديد */
         }
         .jsa-accordion-item:hover {
-            background-color:#E0E5E9; 
+            background-color:var(--hover-background); /* متغير جديد */
             transform: translateY(-2px);
         }
         .jsa-accordion-item i {
@@ -321,7 +368,7 @@
             /* يرث كل أنماط .panel */
             padding:15px 18px; 
             display:none;
-            background-color:white;
+            background-color:var(--card-background); /* متغير جديد */
             overflow-y:auto;
             border-left:5px solid currentColor; /* مهم: ليرث اللون */
             margin-top:8px;
@@ -351,13 +398,18 @@
             width:100%;
             max-width: var(--app-max-width); /* يتبع العرض الأقصى للحاوية */
             height:65px; /* Slightly taller nav bar */
-            background-color:white;
+            background-color:var(--card-background); /* متغير جديد */
             box-shadow:0 -5px 20px rgba(0,0,0,0.1); /* Softer shadow upwards */
             z-index:10;
             left:50%;
             transform:translateX(-50%);
             border-radius: 0 0 12px 12px; /* Match app container corners */
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
+        .dark-mode .nav-bar {
+            box-shadow:0 -5px 20px rgba(255,255,255,0.05);
+        }
+
         .nav-button {
             display:flex; flex-direction:column; align-items:center; justify-content:center;
             color:var(--text-muted); /* Muted color for inactive */
@@ -409,12 +461,15 @@
             animation: fadeIn 0.3s ease-out; 
         }
         .modal-content {
-            background-color: #fefefe; margin: 5% auto; padding: 25px; border: none; 
+            background-color: var(--modal-background); /* متغير جديد */
+            margin: 5% auto; padding: 25px; border: none; 
             width: 90%; max-width: 450px; 
             border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
             position: relative;
             animation: slideIn 0.3s ease-out; 
+            transition: background-color 0.3s;
+            color: var(--text-color); /* لضمان أن النص يتبع وضع الألوان */
         }
         .close-btn {
             color: var(--text-muted); float: right; font-size: 30px; font-weight: bold; cursor: pointer;
@@ -474,13 +529,20 @@
             border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s, color 0.3s;
+            background-color: var(--card-background); /* متغير جديد */
+            color: var(--text-color); /* متغير جديد */
         }
         #jsaSearch:focus {
             border-color: var(--jsa-color);
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
             outline: none;
         }
+        .dark-mode #jsaSearch {
+             /* لإظهار الـ placeholder في الـ Dark Mode */
+             color: var(--dark-text);
+        }
+        
         
         /* ------------------------------------- */
         /* 🟢 أنماط النافذة المنبثقة لتأكيد JSA */
@@ -498,7 +560,7 @@
             margin-top: 0;
         }
         #jsaConfirmationModal p {
-            color: var(--secondary-color);
+            color: var(--text-color); /* متغير جديد */
             font-size: 15px;
             margin: 20px 0;
         }
@@ -528,6 +590,23 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
+
+        /* ======================================= */
+        /* 🆕 أنماط زر تبديل الوضع (Dark/Light Mode) */
+        /* ======================================= */
+        .mode-toggle {
+            position: absolute;
+            top: 25px;
+            right: 20px; 
+            cursor: pointer;
+            color: white; /* Always white on the dark header */
+            font-size: 20px;
+            transition: transform 0.2s;
+            z-index: 2;
+        }
+        .mode-toggle:hover {
+            transform: scale(1.1);
+        }
 
         /* ======================================= */
         /* === استعلام الوسائط لشاشات الكمبيوتر === */
@@ -583,8 +662,7 @@
         }
     </style>
 </head>
-<body>
-
+<body class="light-mode">
 <div id="leaderboardModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="hideLeaderboardModal()">&times;</span>
@@ -614,7 +692,7 @@
                 <tbody>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">CAT EMERGENCY</td><td style="border: 1px solid var(--border-color); padding: 8px;">EMERGENCY</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0543133645">054 313 3645</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">HARADH CLINIC</td><td style="border: 1px solid var(--border-color); padding: 8px;">Haradh Clinic</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0569180911">056 918 0911</a></td></tr>
-                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Maher A. Jardali</td><td style="border: 1px solid var(--border-color); padding: 8px;">Operation Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505817134">050 581 7134</a></td></tr>
+                    <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Maher A. Jardali</td><td style="border: 1px solid var(--border-color); padding: 8px;">Operation Manager</td><td style="border: 1.5px solid var(--border-color); padding: 8px;"><a href="tel:0505817134">050 581 7134</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Rifat Mehmood</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0505366873">050 536 6873</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Shahzad Ahmad Khan</td><td style="border: 1.5px solid var(--border-color); padding: 8px;">HSSE Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0543133645">054 313 3645</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Mahmoud Al Cheikh</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0551367496">055 136 7496</a></td></tr>
@@ -622,7 +700,7 @@
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hassan El Cherbagi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0539039724">053 903 9724</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Hadi Hamdi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Mechanical Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0508838541">050 883 8541</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Imad El Hage</td><td style="border: 1px solid var(--border-color); padding: 8px;">Project PMV Manager</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0553713952">055 371 3952</a></td></tr>
-                    <tr><td style="border: 1.5px solid var(--border-color); padding: 8px;">Rabih Hassan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Civil Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0504838832">050 483 8832</a></td></tr>
+                    <tr><td style="1.5px solid var(--border-color); padding: 8px;">Rabih Hassan</td><td style="border: 1px solid var(--border-color); padding: 8px;">Sr. Civil Engineer</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0504838832">050 483 8832</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Om Prakash</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0544303677">054 430 3677</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Tauqeer Nabi</td><td style="border: 1px solid var(--border-color); padding: 8px;">Environmental Coordinator</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0595820934">059 582 0934</a></td></tr>
                     <tr><td style="border: 1px solid var(--border-color); padding: 8px;">Irfan Haider</td><td style="border: 1px solid var(--border-color); padding: 8px;">HSSE Supervisor</td><td style="border: 1px solid var(--border-color); padding: 8px;"><a href="tel:0590654748">059 065 4748</a></td></tr>
@@ -671,11 +749,15 @@
 
 
 <div class="app-container">
-    <div class="header"><span>My Observations App 👷🏻‍♂️</span></div>
+    <div class="header">
+        <span>My Observations App 👷🏻‍♂️</span>
+        <div class="mode-toggle" onclick="toggleDarkMode()">
+             <i id="modeIcon" class="fas fa-moon"></i> 
+        </div>
+    </div>
 
     <div class="content-area">
-
-        <div id="NewsTab" class="tab-content">
+<div id="NewsTab" class="tab-content">
             <div id="AnnouncementsContainer">
                 <div id="newsLoading" class="loading-spinner">
                     <i class="fas fa-spinner fa-spin"></i> Fetching news...
@@ -704,7 +786,7 @@
             <div class="info-month"> The Color Code of This Month is: <span id="colorName">...</span></div>
 
             <div class="announcement-card" id="eomCard" style="border:2px solid gold; margin-bottom:15px; cursor:pointer;">
-                <div class="card-title" id="eomCardTitle" style="color:var(--secondary-color); font-size:18px;">
+                <div class="card-title" id="eomCardTitle" style="color:var(--text-color); font-size:18px;">
                     <i class="fas fa-trophy" style="color: #FFD700;"></i> Employee of the Month:
                 </div>
                 <div class="card-content" id="employeeOfMonth" style="font-size:18px; font-weight:bold; color:var(--primary-color); display:block; border-top: none; padding-top: 0; margin-top: 0;">Loading...</div>
@@ -843,7 +925,7 @@ const tbtData = [
     { title: " TBT of The Day Construction Fires", link: "https://drive.google.com/file/d/1nXBiIuAEjs4om2NwASqfyhtT-8IUBpGt/view?usp=drivesdk" },
     { title: " TBT of The Day Corrosive Materials", link: "https://drive.google.com/file/d/1VaFxPYhYt0Ho8blbkGQi2S4ubsT882ge/view?usp=drivesdk" },
     { title: " TBT of The Day Dangerously reactive material", link: "https://drive.google.com/file/d/16CNFN5iuf3YFyVW-tYNVQgHkRu8z8deg/view?usp=drivesdk" },
-    { title: " TBT of The Day Dial before you Dig", link: "https://drive.google.com/file/d/1YlWyaHh2lPoum-OYYoJ2qP8t948qwZLI/view?usp=drivesdk" },
+    { title: " TBT of The Day Dial before you Dig", link: "https://drive.google.com/file/d/1YlWyaHh2lPoum-OYYoJ2qP8t948qwLZI/view?usp=drivesdk" },
     { title: " TBT of The Day Driving in Reverse", link: "https://drive.google.com/file/d/1QzLSWz3CFfjGdmj62OsFdvT5IcV_lrqJ/view?usp=drivesdk" },
     { title: " TBT of The Day Emergency Response", link: "https://drive.google.com/file/d/1bWiXimPy6SmqbtEs5LxJE9zvS765GSzN/view?usp=drivesdk" },
     { title: " TBT of The Day Equipment Guards", link: "https://drive.google.com/file/d/1i4o3HHM6O2EPJ1hf-2IQ97_AREDCMIDr/view?usp=drivesdk" },
@@ -908,7 +990,7 @@ const jsaData = [
         { title: "Hand Excavation For Exposing Existing Ug Facility", link: "https://drive.google.com/file/d/1tADi51OZAgwGoIFpAul1uyq4z4WKGsTO/view?usp=drivesdk" },
         { title: "Leak Testing For Tubing", link: "https://drive.google.com/file/d/1yvHoWnV1tc_zN7k4vCp_girvot7QQeZv/view?usp=drivesdk" },
         { title: "Levelling And Compaction For Anchor Base", link: "https://drive.google.com/file/d/1nU2f6qvX-JWTozC4xz0M3OVGOURGGKsv/view?usp=drivesdk" },
-        { title: "Levelling And Compaction For Cellar Base", link: "https://drive.google.com/file/d/1Mp77FAgB9Lfh7C6hmeW4KjGo_W3qmPcx/view?usp=drivesdk" },
+        { title: "Levelling And Compaction For Cellar Base", link: "https://drive.google.com/file/d/1Mp77FAgB9Lfh7C6hmeW4jGo_W3qmPcx/view?usp=drivesdk" },
         { title: "Loading & Unloading Activity Using Fork", link: "https://drive.google.com/file/d/1qX1aw1BTySOnECTnDK0s1d1iY3ta2H7_/view?usp=drivesdk" },
         { title: "Mobilization Demobilization", link: "https://drive.google.com/file/d/1wwMo2li6LxdkvRkULe5h5tQ0IdjE0OTP/view?usp=drivesdk" },
         { title: "Mobile Crane Operation", link: "https://drive.google.com/file/d/1fEK4a16-l9DOPcAzmUfKwjWjMkefy2Yz/view?usp=drivesdk" },
@@ -1241,7 +1323,44 @@ function filterJSAList() {
     renderJSAList(filteredData);
 }
 
+// 🆕 دالة تبديل الوضع (Dark/Light Mode)
+function toggleDarkMode() {
+    const body = document.body;
+    const isDarkMode = body.classList.toggle('dark-mode');
+    const modeIcon = document.getElementById('modeIcon');
+    
+    // تحديث الأيقونة والنص
+    if (modeIcon) {
+        modeIcon.classList.remove(isDarkMode ? 'fa-sun' : 'fa-moon');
+        modeIcon.classList.add(isDarkMode ? 'fa-moon' : 'fa-sun');
+    }
+    
+    // حفظ التفضيل (اختياري، لكن يوصى به)
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    
+    // لإعادة تطبيق الألوان على العناصر التي تستخدم inline style أو ترث من body/root
+    renderJSAList(jsaData); // إعادة رسم قائمة JSA لضبط ألوانها
+    loadTBTOfTheDay(); // إعادة تحميل TBT لضبط لونه
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
+    // 🆕 تطبيق التفضيل المحفوظ عند التحميل
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        const modeIcon = document.getElementById('modeIcon');
+        if (modeIcon) {
+             modeIcon.classList.remove('fa-sun');
+             modeIcon.classList.add('fa-moon');
+        }
+    } else {
+         const modeIcon = document.getElementById('modeIcon');
+         if (modeIcon) {
+             modeIcon.classList.add('fa-sun'); // Default icon for Light Mode
+         }
+    }
+
     // 🛑 تطبيق اللون المخصص للزر النشط افتراضيًا عند تحميل الصفحة
     const infoButton = document.querySelector('.nav-button[onclick*="InfoTab"]');
     if(infoButton) {
@@ -1287,7 +1406,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Employee of the Month/Leaderboard Data Fetch ---
     fetchEOMData();
-loadTBTOfTheDay();
+    loadTBTOfTheDay();
     // --- JSA Tab Initialization ---
     renderJSAList(jsaData);
     document.getElementById('jsaSearch').addEventListener('input', filterJSAList);
