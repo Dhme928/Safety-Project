@@ -21,13 +21,16 @@
           --success-color: #27AE60; /* Green for success/positive */
           --danger-color: #C0392B; /* Red for danger/emergency */
           --jsa-color: #3498DB; /* Blue for JSA tab */
+          --kpi-color: #8e44ad; /* 🆕 Purple for KPI tab */
+          --heat-color: #e67e22; /* 🆕 Orange for Heat Stress */
+          --wind-color: #00BCD4; /* 🆕 Cyan/Blue for Wind Speed */
           --background-color: #FFFFFF; /* Main white background */
           --body-background-color: var(--accent-light); /* Off-white for body */
           --text-color: #2C3E50; /* Main text color */
           --card-background: #FFFFFF; /* Card/Panel background */
           --modal-background: #fefefe; /* Modal content background */
           --hover-background: #E0E5E9; /* Hover on accordion/button */
-          --header-background-color: red /* 🆕 خلفية الهيدر في الوضع الفاتح */
+          --header-background-color: #C0392B; /* Using Red for Safety Group Identity */
           
           /* Dark Mode Colors (Custom Properties) */
           --dark-bg: #1e1e1e;
@@ -130,6 +133,7 @@
         }
         .tab-content.active {
             display:block;
+             animation: fadeIn 0.3s ease;
         }
         /* ارتفاع الإطارات: يعتمد على ارتفاع التاب */
         iframe {
@@ -140,7 +144,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Subtle shadow for iframes */
         }
         /* ارتفاع محتوى المعلومات */
-        #InfoTab {
+        #InfoTab, #ToolsTab {
             overflow-y:auto;
             max-height:calc(100% - 0px); /* Adjust for content-area padding */
             padding-bottom:100px;
@@ -296,8 +300,6 @@
             line-height: 1.5;
             color: var(--text-color); /* متغير جديد */
         }
-/* (بقية أنماط القوائم كما هي) */
-/* (تكملة أنماط CSS من الجزء الأول) */
 
         /* 🛠️ التعديل هنا: تطبيق النقاط البرتقالية فقط على القوائم غير المرقمة (<ul>) */
         .panel ul li:before {
@@ -415,11 +417,12 @@
             color:var(--text-muted); /* Muted color for inactive */
             font-size:12px; /* Slightly larger font */
             cursor:pointer;
-            width:20%; /* 5 buttons = 20% each */
+            width: 16.66%; /* 🟢 Updated to fit 6 buttons */
             transition:color 0.3s ease, transform 0.2s ease;
             position: relative;
             font-family: 'Lato', sans-serif;
             font-weight: 600;
+            padding: 0 2px; text-align: center;
         }
         
         /* 🛑 التعديل هنا: نعتمد على JavaScript لتطبيق لون الزر النشط */
@@ -542,7 +545,82 @@
              /* لإظهار الـ placeholder في الـ Dark Mode */
              color: var(--dark-text);
         }
+
+        /* 🆕 CSS for Safety Tools Dashboard */
+        .tool-toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: var(--accent-light);
+            border-radius: 25px;
+            padding: 4px;
+        }
+        .tool-toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        .tool-toggle-btn.active-tool {
+            background-color: var(--kpi-color);
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tool-toggle-btn.active-tool[data-tool="heat"] { background-color: var(--heat-color); }
+        .tool-toggle-btn.active-tool[data-tool="wind"] { background-color: var(--wind-color); }
         
+        .kpi-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--kpi-color);
+            transition: transform 0.2s ease, background-color 0.3s;
+        }
+        .dark-mode .kpi-card { box-shadow: 0 4px 10px rgba(255,255,255,0.05); }
+        .kpi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .kpi-title { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--text-color); font-size: 16px; margin: 0; }
+        .kpi-badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+        .kpi-badge.leading { background-color: rgba(39, 174, 96, 0.2); color: #27ae60; }
+        .kpi-badge.lagging { background-color: rgba(241, 196, 15, 0.2); color: #f39c12; }
+        
+        .kpi-inputs { background-color: var(--accent-light); padding: 12px; border-radius: 8px; margin-top: 10px; }
+        .kpi-input-group { margin-bottom: 10px; }
+        .kpi-input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: bold; }
+        .kpi-input-field { width: 100%; padding: 12px; box-sizing: border-box; border: 2px solid var(--border-color); border-radius: 8px; font-size: 16px; margin-bottom:0; background-color: var(--card-background); color: var(--text-color); }
+        .kpi-input-field:focus { outline: none; border-color: var(--kpi-color); }
+        .dark-mode .kpi-input-field { color: var(--dark-text); }
+
+        .kpi-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
+        .kpi-result-box { text-align: center; }
+        .kpi-result-label { font-size: 11px; color: var(--text-muted); }
+        .kpi-result-value { font-size: 20px; font-weight: 700; font-family: 'Poppins', sans-serif; }
+        .kpi-citation { font-size: 10px; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+        
+        .text-good { color: var(--success-color); }
+        .text-bad { color: var(--danger-color); }
+        .text-neutral { color: var(--text-muted); }
+
+        #heatIndexResultCard, #windSpeedResultCard {
+            display: none; padding: 25px; border-radius: 12px; color: white; text-align: center; margin-top: 20px; transition: background-color 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .heat-value, .wind-value { font-size: 42px; font-weight: 800; margin: 10px 0; font-family: 'Poppins', sans-serif; }
+        .heat-category, .wind-category { font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .heat-recommendations, .wind-recommendations { font-size: 14px; background-color: rgba(0,0,0,0.15); padding: 15px; border-radius: 8px; text-align: left; }
+        .heat-recommendations ul, .wind-recommendations ul { margin: 0; padding-left: 20px; }
+
+        /* 🆕 CSS for GPS Button */
+        .gps-btn { width: 100%; padding: 12px; margin-top:10px; background-color: var(--secondary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: bold; transition: background-color 0.3s; }
+        .gps-btn:hover { background-color: #1a252f; }
+        .gps-result { margin-top: 10px; font-size: 13px; word-break: break-all; color: var(--text-color); }
         
         /* ------------------------------------- */
         /* 🟢 أنماط النافذة المنبثقة لتأكيد JSA */
@@ -625,7 +703,7 @@
             }
 
             /* ضبط ارتفاع محتوى المعلومات */
-             #InfoTab {
+             #InfoTab, #ToolsTab {
                 height: 100%;
                 max-height: 100%;
                 padding-bottom: 80px; 
@@ -659,6 +737,8 @@
             .modal-content {
                 margin: auto; 
             }
+            
+            #kpiListContainer { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         }
     </style>
 </head>
@@ -782,6 +862,89 @@
             <div id="jsaListContainer">
                 </div>
         </div>
+
+        <div id="ToolsTab" class="tab-content">
+            <div class="tool-toggle-container">
+                <button class="tool-toggle-btn active-tool" data-tool="kpi" onclick="switchTool('kpi')">Safety KPIs</button>
+                <button class="tool-toggle-btn" data-tool="heat" onclick="switchTool('heat')">Heat Stress</button>
+                <button class="tool-toggle-btn" data-tool="wind" onclick="switchTool('wind')">Wind Limits</button>
+            </div>
+
+            <div id="kpiSection">
+                <div style="text-align:center; margin-bottom:15px; color:var(--kpi-color);">
+                    <i class="fas fa-calculator fa-2x"></i>
+                    <h3 style="margin:5px 0;">Safety KPI Calculator</h3>
+                    <small style="color:var(--text-muted);">Based on Saudi Aramco CSM & Safety Handbook</small>
+                </div>
+                <div id="kpiListContainer">
+                    </div>
+            </div>
+
+            <div id="heatStressSection" style="display:none;">
+                <div style="text-align:center; margin-bottom:15px; color:var(--heat-color);">
+                    <i class="fas fa-sun fa-2x"></i>
+                    <h3 style="margin:5px 0;">Heat Stress Calculator</h3>
+                    <small style="color:var(--text-muted);">Calculate Heat Index & Hazard Level</small>
+                </div>
+                
+                <div class="kpi-card" style="border-left-color: var(--heat-color);">
+                    <div class="kpi-input-group">
+                        <label>Air Temperature (°C)</label>
+                        <input type="number" id="inputTemp" class="kpi-input-field" placeholder="e.g., 35" oninput="calculateHeatIndex()">
+                    </div>
+                    <div class="kpi-input-group">
+                        <label>Relative Humidity (%)</label>
+                        <input type="number" id="inputHumidity" class="kpi-input-field" placeholder="e.g., 40" oninput="calculateHeatIndex()">
+                    </div>
+                </div>
+
+                <div id="heatIndexResultCard">
+                    <div style="font-size:12px; opacity:0.9;">HEAT INDEX</div>
+                    <div class="heat-value" id="heatIndexValue">--</div>
+                    <div class="heat-category" id="heatRiskLevel">--</div>
+                    
+                    <div class="heat-recommendations">
+                        <div style="font-weight:bold; margin-bottom:5px;">⚠️ Recommendations (Saudi Aramco Safety Handbook, Section 4):</div>
+                        <ul id="heatRecommendationsList">
+                            <li>Enter temperature and humidity to see results.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="font-size:10px; color:var(--text-muted); margin-top:15px; text-align:center; font-style:italic;">
+                    Note: This tool uses the NOAA Heat Index formula. Always follow specific site GI 6.021 or Flag System if strictly enforced.
+                </div>
+            </div>
+
+            <div id="windSpeedSection" style="display:none;">
+                <div style="text-align:center; margin-bottom:15px; color:var(--wind-color);">
+                    <i class="fas fa-wind fa-2x"></i>
+                    <h3 style="margin:5px 0;">Wind Speed Safety Limits</h3>
+                    <small style="color:var(--text-muted);">Based on CSM Vol II (Cranes & Manbaskets)</small>
+                </div>
+                
+                <div class="kpi-card" style="border-left-color: var(--wind-color);">
+                    <div class="kpi-input-group">
+                        <label>Current Wind Speed (km/h)</label>
+                        <input type="number" id="inputWind" class="kpi-input-field" placeholder="e.g., 25" oninput="calculateWindSafety()">
+                    </div>
+                </div>
+
+                <div id="windSpeedResultCard">
+                    <div style="font-size:12px; opacity:0.9;">STATUS</div>
+                    <div class="wind-value" id="windValue">--</div>
+                    <div class="wind-category" id="windRiskLevel">--</div>
+                    
+                    <div class="wind-recommendations">
+                        <div style="font-weight:bold; margin-bottom:5px;">⚠️ Operational Restrictions (CSM Vol II):</div>
+                        <ul id="windRecommendationsList">
+                            <li>Enter wind speed to see limits.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="InfoTab" class="tab-content active"> 
             <div class="info-month"> The Color Code of This Month is: <span id="colorName">...</span></div>
 
@@ -812,6 +975,10 @@
                     <li>Answer all the questions from the operator (الإجابة على أسئلة المتصل).</li>
                     <li>Don't Hang up till the operator tells you to do so (لا تُغلق الخط حتى يُطلب منك ذلك).</li>
                 </ol>
+                <button onclick="getGPSLocation()" class="gps-btn">
+                    <i class="fas fa-map-marker-alt"></i> Share My Location (GPS)
+                </button>
+                <div id="locationResult" class="gps-result"></div>
             </div>
 
             <button class="accordion" id="evacuationAccordion" data-color="var(--success-color)">
@@ -905,6 +1072,10 @@
         <div class="nav-button" data-color="var(--jsa-color)" onclick="openTab(event, 'JSATab')">
             <span class="nav-icon"><i class="fas fa-handshake"></i></span>
             <span>JSA</span>
+        </div>
+        <div class="nav-button" data-color="var(--kpi-color)" onclick="openTab(event, 'ToolsTab')">
+            <span class="nav-icon"><i class="fas fa-calculator"></i></span>
+            <span>Tools</span>
         </div>
         <div class="nav-button active" data-color="var(--danger-color)" onclick="openTab(event, 'InfoTab')"> 
             <span class="nav-icon"><i class="fas fa-circle-info"></i></span>
@@ -1005,6 +1176,322 @@ const jsaData = [
         { title: "Xray And Pmi", link: "https://drive.google.com/file/d/1VglyFHzLiNFCBBQrG00vQ1lW3OtsQNfk/view?usp=drivesdk" }
 
 ];
+
+// 🆕 KPI Data & Logic
+const kpiData = [
+    {
+      id: 1, category: "Lagging", name: "TRIR (Total Recordable Incident Rate)", formula: "rate_200k",
+      inputs: [{ name: "incidents", label: "Recordable Incidents" }, { name: "hours", label: "Total Man-hours" }],
+      targetStr: "< 0.05", targetVal: 0.05, targetType: "max",
+      source: "CSM Vol I, Section 2.0; Safety Handbook"
+    },
+    {
+      id: 2, category: "Lagging", name: "LTI Rate (Lost Time Injury Rate)", formula: "rate_200k",
+      inputs: [{ name: "lti", label: "Lost Time Injuries" }, { name: "hours", label: "Total Man-hours" }],
+      targetStr: "0.00", targetVal: 0.00, targetType: "max",
+      source: "CSM Vol I, Section 2.0; CSM Vol II, Ch 1"
+    },
+    {
+      id: 3, category: "Lagging", name: "Motor Vehicle Accident Rate", formula: "rate_1m",
+      inputs: [{ name: "mva", label: "MVA Count" }, { name: "km", label: "Kilometers Driven" }],
+      targetStr: "0.00", targetVal: 0.00, targetType: "max",
+      source: "CSM Vol II, Ch 8; Safety Handbook"
+    },
+    {
+      id: 4, category: "Leading", name: "Work Permit Compliance %", formula: "percentage",
+      inputs: [{ name: "pass", label: "Permits Passed Audit" }, { name: "total", label: "Total Permits Audited" }],
+      targetStr: "100%", targetVal: 100, targetType: "min",
+      source: "CSM Vol II, Ch 4 (Work Permits)"
+    },
+    {
+      id: 5, category: "Leading", name: "PPE Compliance Rate", formula: "percentage",
+      inputs: [{ name: "pass", label: "Workers with Correct PPE" }, { name: "total", label: "Total Workers Observed" }],
+      targetStr: "100%", targetVal: 100, targetType: "min",
+      source: "CSM Vol II, Ch 3 (PPE)"
+    },
+    {
+      id: 6, category: "Leading", name: "Toolbox Talk Participation %", formula: "percentage",
+      inputs: [{ name: "pass", label: "Personnel Attended" }, { name: "total", label: "Total Personnel on Site" }],
+      targetStr: "100%", targetVal: 100, targetType: "min",
+      source: "CSM Vol I; Safety Handbook"
+    },
+    {
+      id: 7, category: "Leading", name: "Hazard ID Closure Rate", formula: "percentage",
+      inputs: [{ name: "pass", label: "Conditions Closed" }, { name: "total", label: "Conditions Identified" }],
+      targetStr: "100%", targetVal: 100, targetType: "min",
+      source: "CSM Vol I, Sec 2; Safety Handbook"
+    }
+];
+
+function renderKPIs() {
+    const container = document.getElementById('kpiListContainer');
+    if(!container) return;
+    container.innerHTML = '';
+
+    kpiData.forEach(kpi => {
+        const card = document.createElement('div');
+        card.className = 'kpi-card';
+        card.style.borderLeftColor = 'var(--kpi-color)';
+        
+        const badgeClass = kpi.category.toLowerCase();
+        
+        let inputsHTML = '';
+        kpi.inputs.forEach(input => {
+            inputsHTML += `
+                <div class="kpi-input-group">
+                    <label>${input.label}</label>
+                    <input type="number" class="kpi-input-field" data-kpi-id="${kpi.id}" data-field="${input.name}" placeholder="0" oninput="calculateKPI(${kpi.id})">
+                </div>
+            `;
+        });
+
+        card.innerHTML = `
+            <div class="kpi-header">
+                <h4 class="kpi-title">${kpi.name}</h4>
+                <span class="kpi-badge ${badgeClass}">${kpi.category}</span>
+            </div>
+            <div class="kpi-inputs">
+                ${inputsHTML}
+            </div>
+            <div class="kpi-footer">
+                <div class="kpi-result-box">
+                    <div class="kpi-result-label">Target: ${kpi.targetStr}</div>
+                    <div class="kpi-result-value text-neutral" id="result-${kpi.id}">-</div>
+                </div>
+            </div>
+            <div class="kpi-citation">Source: ${kpi.source}</div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function calculateKPI(id) {
+    const kpi = kpiData.find(k => k.id === id);
+    const inputs = document.querySelectorAll(`input[data-kpi-id="${id}"]`);
+    const resultEl = document.getElementById(`result-${id}`);
+    
+    const vals = {};
+    inputs.forEach(inp => vals[inp.dataset.field] = parseFloat(inp.value) || 0);
+
+    const v1 = vals[kpi.inputs[0].name];
+    const v2 = vals[kpi.inputs[1].name];
+    
+    let result = '-';
+    let numResult = 0;
+
+    if (!v2 || v2 === 0) {
+        result = '-';
+    } else {
+        if (kpi.formula === 'rate_200k') {
+            numResult = (v1 * 200000) / v2;
+            result = numResult.toFixed(3);
+        } else if (kpi.formula === 'rate_1m') {
+            numResult = (v1 * 1000000) / v2;
+            result = numResult.toFixed(3);
+        } else if (kpi.formula === 'percentage') {
+            numResult = (v1 / v2) * 100;
+            result = numResult.toFixed(1) + '%';
+        }
+    }
+
+    resultEl.innerText = result;
+    
+    // Color Logic
+    resultEl.classList.remove('text-good', 'text-bad', 'text-neutral');
+    if (result === '-') {
+        resultEl.classList.add('text-neutral');
+    } else {
+        let isGood = false;
+        if (kpi.targetType === 'max') isGood = numResult <= kpi.targetVal;
+        if (kpi.targetType === 'min') isGood = numResult >= kpi.targetVal;
+        
+        resultEl.classList.add(isGood ? 'text-good' : 'text-bad');
+    }
+}
+
+// 🆕 Tool Switching Logic
+function switchTool(toolName) {
+    const btns = document.querySelectorAll('.tool-toggle-btn');
+    const kpiSection = document.getElementById('kpiSection');
+    const heatSection = document.getElementById('heatStressSection');
+    const windSection = document.getElementById('windSpeedSection');
+
+    btns.forEach(btn => {
+        if(btn.dataset.tool === toolName) {
+            btn.classList.add('active-tool');
+        } else {
+            btn.classList.remove('active-tool');
+        }
+    });
+
+    // Hide all first
+    kpiSection.style.display = 'none';
+    heatSection.style.display = 'none';
+    windSection.style.display = 'none';
+
+    if (toolName === 'kpi') {
+        kpiSection.style.display = 'block';
+    } else if (toolName === 'heat') {
+        heatSection.style.display = 'block';
+    } else if (toolName === 'wind') {
+        windSection.style.display = 'block';
+    }
+}
+
+// 🆕 Heat Stress Calculation Logic
+function calculateHeatIndex() {
+    const tInput = document.getElementById('inputTemp').value;
+    const hInput = document.getElementById('inputHumidity').value;
+    const resultCard = document.getElementById('heatIndexResultCard');
+    const valueEl = document.getElementById('heatIndexValue');
+    const riskEl = document.getElementById('heatRiskLevel');
+    const listEl = document.getElementById('heatRecommendationsList');
+
+    if (!tInput || !hInput) {
+        resultCard.style.display = 'none';
+        return;
+    }
+
+    const T = parseFloat(tInput);
+    const RH = parseFloat(hInput);
+
+    // Convert C to F for calculation (standard NOAA formula uses F)
+    const T_F = (T * 9/5) + 32;
+    
+    // Simple Heat Index Formula (Rothfusz regression)
+    let HI_F = 0.5 * (T_F + 61.0 + ((T_F-68.0)*1.2) + (RH*0.094));
+
+    if (HI_F >= 80) {
+        HI_F = -42.379 + 2.04901523*T_F + 10.14333127*RH - 0.22475541*T_F*RH - 0.00683783*T_F*T_F - 0.05481717*RH*RH + 0.00122874*T_F*T_F*RH + 0.00085282*T_F*RH*RH - 0.00000199*T_F*T_F*RH*RH;
+    }
+
+    // Convert back to C
+    const HI_C = (HI_F - 32) * 5/9;
+    const displayVal = HI_C.toFixed(1) + '°C';
+    
+    valueEl.innerText = displayVal;
+    resultCard.style.display = 'block';
+
+    // Categorization & Colors
+    let riskLevel = "";
+    let color = "";
+    let recs = "";
+
+    if (HI_C < 27) {
+        riskLevel = "LOW RISK (Safe)";
+        color = "#27ae60"; // Green
+        recs = "<li>Hydration: Drink water when thirsty.</li><li>Activity: Normal work activity allowed.</li>";
+    } else if (HI_C >= 27 && HI_C < 32) {
+        riskLevel = "CAUTION";
+        color = "#f1c40f"; // Yellow
+        resultCard.style.color = "#333"; // Dark text for yellow bg
+        recs = "<li>Hydration: Drink water freely (Min 1 cup / 20 min).</li><li>Activity: Monitor for fatigue.</li>";
+    } else if (HI_C >= 32 && HI_C < 41) {
+        riskLevel = "EXTREME CAUTION";
+        color = "#e67e22"; // Orange
+        resultCard.style.color = "white";
+        recs = "<li>Hydration: 1 cup (250ml) every 15-20 mins.</li><li>Rest: Rest in shade if feeling strain.</li><li>Monitoring: Watch for heat cramps.</li>";
+    } else if (HI_C >= 41 && HI_C < 54) {
+        riskLevel = "DANGER";
+        color = "#c0392b"; // Red
+        resultCard.style.color = "white";
+        recs = "<li>Hydration: Strictly enforce 1 cup every 10-15 mins.</li><li>Work: Reschedule strenuous work to cooler times.</li><li>Monitoring: Check workers for heat exhaustion.</li>";
+    } else {
+        riskLevel = "EXTREME DANGER";
+        color = "#2c3e50"; // Dark/Black
+        resultCard.style.color = "white";
+        recs = "<li>ACTION: STOP all non-essential work.</li><li>Risk: High risk of Heat Stroke.</li><li>Emergency: Implement emergency protocols immediately.</li>";
+    }
+
+    resultCard.style.backgroundColor = color;
+    riskEl.innerText = riskLevel;
+    listEl.innerHTML = recs;
+}
+
+// 🆕 NEW: Wind Speed Safety Logic
+function calculateWindSafety() {
+    const wInput = document.getElementById('inputWind').value;
+    const resultCard = document.getElementById('windSpeedResultCard');
+    const valueEl = document.getElementById('windValue');
+    const riskEl = document.getElementById('windRiskLevel');
+    const listEl = document.getElementById('windRecommendationsList');
+
+    if (!wInput) {
+        resultCard.style.display = 'none';
+        return;
+    }
+
+    const windSpeed = parseFloat(wInput);
+    valueEl.innerText = windSpeed.toFixed(1) + ' km/h';
+    resultCard.style.display = 'block';
+
+    let riskLevel = "";
+    let color = "";
+    let recs = "";
+
+    if (windSpeed < 20) {
+        riskLevel = "SAFE";
+        color = "#27ae60"; // Green
+        recs = "<li>Safe for most operations.</li><li>Monitor changes.</li>";
+    } else if (windSpeed >= 20 && windSpeed <= 25) {
+        riskLevel = "CAUTION";
+        color = "#f1c40f"; // Yellow
+        resultCard.style.color = "#333"; 
+        recs = "<li>Approaching limit for Manbaskets.</li><li>Secure loose materials.</li>";
+    } else if (windSpeed > 25 && windSpeed <= 32) {
+        riskLevel = "RESTRICTED";
+        color = "#e67e22"; // Orange
+        resultCard.style.color = "white"; 
+        recs = "<li><b>STOP:</b> Manbasket (Personnel Platform) operations prohibited (>25 km/h). (CSM II-1.4.3.4)</li><li>Crane lifting permitted with caution.</li>";
+    } else if (windSpeed > 32) {
+        riskLevel = "DANGER - STOP LIFTING";
+        color = "#c0392b"; // Red
+        resultCard.style.color = "white"; 
+        recs = "<li><b>STOP:</b> All Crane Lifting Operations prohibited (>32 km/h). (CSM II-1.3.1)</li><li><b>STOP:</b> Manbasket operations.</li><li>Secure cranes as per manufacturer.</li>";
+    } 
+    
+    // General high wind for scaffolding (often cited >50-65km/h but good to warn early)
+    if (windSpeed > 50) {
+        recs += "<li><b>STOP:</b> Work at height / Scaffolding.</li>";
+        riskLevel = "HIGH DANGER";
+    }
+
+    resultCard.style.backgroundColor = color;
+    riskEl.innerText = riskLevel;
+    listEl.innerHTML = recs;
+}
+
+// 🆕 NEW: GPS Location Function
+function getGPSLocation() {
+    const resultDiv = document.getElementById('locationResult');
+    resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+    
+    if (!navigator.geolocation) {
+        resultDiv.innerHTML = "Geolocation is not supported by your browser.";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude.toFixed(6);
+            const long = position.coords.longitude.toFixed(6);
+            const mapLink = `https://www.google.com/maps?q=${lat},${long}`;
+            
+            resultDiv.innerHTML = `
+                <div style="background:var(--accent-light); padding:10px; border-radius:5px; margin-top:5px;">
+                    <strong>Lat:</strong> ${lat} <br>
+                    <strong>Long:</strong> ${long} <br>
+                    <a href="${mapLink}" target="_blank" style="color:var(--primary-color); font-weight:bold;">
+                        <i class="fas fa-map-marked-alt"></i> Open in Google Maps
+                    </a>
+                </div>
+            `;
+        },
+        (error) => {
+            resultDiv.innerHTML = `Unable to retrieve location. Error: ${error.message}`;
+        }
+    );
+}
 
 
 // 🛑 دالة فتح التابات (لم تتغير)
@@ -1410,6 +1897,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- JSA Tab Initialization ---
     renderJSAList(jsaData);
     document.getElementById('jsaSearch').addEventListener('input', filterJSAList);
+    // --- KPI Initialization ---
+    renderKPIs();
 
 
     // --- Load News from Google Sheet (Code remains the same) ---
